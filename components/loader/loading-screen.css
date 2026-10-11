@@ -184,12 +184,29 @@
   }
 }
 
+/* Shared photo backdrop (app/page.tsx) — sits under both the loader and the
+   envelope screen on every viewport, so the marquee never restarts between them */
+.invite-photo-backdrop-wrap--shared {
+  display: block;
+}
+
+.loading-screen--invitation.loading-screen--shared-bg {
+  background: transparent;
+}
+
+/* Hand-off: the loader's darker scrim melts away while the envelope screen
+   (lighter scrim + envelope) fades in over the same moving photos */
+.loading-screen.is-fading .loading-screen__readability-scrim {
+  opacity: 0;
+}
+
 /* Full-screen scrim — keeps ivory type readable over photo marquee (esp. mobile) */
 .loading-screen__readability-scrim {
   position: absolute;
   inset: 0;
   z-index: 2;
   pointer-events: none;
+  transition: opacity 1.4s cubic-bezier(0.22, 1, 0.36, 1);
   background:
     linear-gradient(
       90deg,
@@ -331,34 +348,60 @@
 .loading-screen__std-names {
   position: relative;
   z-index: 1;
-  display: block;
-  width: min(88%, 24rem);
-  aspect-ratio: 2161 / 728;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(92%, 30rem);
   margin: 0 auto;
+  font-weight: 400;
+  text-align: center;
+  pointer-events: none;
+  user-select: none;
+  filter:
+    drop-shadow(0 1px 1px color-mix(in srgb, var(--ls-shadow) 90%, transparent))
+    drop-shadow(0 3px 8px color-mix(in srgb, var(--ls-shadow) 70%, transparent))
+    drop-shadow(0 10px 28px color-mix(in srgb, var(--ls-shadow) 45%, transparent));
+}
+
+.loading-screen__std-name,
+.loading-screen__std-and {
+  display: block;
+  padding: 0 0.15em;
   background: linear-gradient(
     118deg,
     var(--couple-name-fill, var(--color-welcome-navy)) 0%,
     var(--couple-name-fill-mid, var(--color-motif-deep)) 48%,
     var(--couple-name-fill-accent, var(--color-welcome-heading)) 100%
   );
-  pointer-events: none;
-  user-select: none;
-  -webkit-mask-size: contain;
-  mask-size: contain;
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-  mask-position: center;
-  filter:
-    drop-shadow(0 0 1px color-mix(in srgb, var(--color-motif-soft) 80%, transparent))
-    drop-shadow(0 1px 1px color-mix(in srgb, var(--ls-shadow) 90%, transparent))
-    drop-shadow(0 3px 8px color-mix(in srgb, var(--ls-shadow) 70%, transparent))
-    drop-shadow(0 10px 28px color-mix(in srgb, var(--ls-shadow) 45%, transparent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.loading-screen__std-name {
+  font-size: clamp(1.3rem, 6.2vw, 2.9rem);
+  line-height: 1.05;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.loading-screen__std-and {
+  margin: -0.1em 0 -0.05em;
+  font-size: clamp(1.6rem, 7vw, 2.8rem);
+  line-height: 1.1;
+}
+
+/* Photos loader — breathing room above "Save the Date" */
+.loading-screen--invitation:not(.loading-screen--plain) .loading-screen__std-headline {
+  margin-top: 1.5rem;
 }
 
 /* Photos loader — ivory lockup on dark marquee scrim */
-.loading-screen--invitation:not(.loading-screen--plain) .loading-screen__std-names {
+.loading-screen--invitation:not(.loading-screen--plain) .loading-screen__std-name,
+.loading-screen--invitation:not(.loading-screen--plain) .loading-screen__std-and {
   background: var(--couple-name-fill-soft, var(--color-motif-soft));
+  -webkit-background-clip: text;
+  background-clip: text;
 }
 
 .loading-screen__std-rule {
@@ -1741,6 +1784,241 @@
   }
 }
 
+/* ---- Photos loader — mobile polish (≤767px) ----
+   Deeper forest vignette instead of a flat muddy wash, champagne accents,
+   larger/more legible type and refined spacing. Plain mode is untouched. */
+@media (max-width: 767px) {
+  .loading-screen--invitation:not(.loading-screen--plain) {
+    --ls-champagne: #e9dfc2;
+    --ls-champagne-soft: color-mix(in srgb, #e9dfc2 72%, transparent);
+    --ls-ivory: #fbfaf3;
+    --ls-forest-deep: #1f3324;
+  }
+
+  .loading-screen--invitation:not(.loading-screen--plain) .loading-screen__readability-scrim {
+    background:
+      radial-gradient(
+        ellipse 120% 70% at 50% 42%,
+        color-mix(in srgb, var(--ls-forest-deep) 30%, transparent) 0%,
+        color-mix(in srgb, var(--ls-forest-deep) 52%, transparent) 70%,
+        color-mix(in srgb, var(--ls-forest-deep) 78%, transparent) 100%
+      ),
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--ls-forest-deep) 72%, transparent) 0%,
+        color-mix(in srgb, var(--ls-forest-deep) 34%, transparent) 22%,
+        color-mix(in srgb, var(--ls-forest-deep) 26%, transparent) 50%,
+        color-mix(in srgb, var(--ls-forest-deep) 48%, transparent) 72%,
+        color-mix(in srgb, var(--ls-forest-deep) 88%, transparent) 100%
+      );
+  }
+
+  .loading-screen--invitation:not(.loading-screen--plain) .loading-screen__save-date header {
+    padding-top: max(2.25rem, calc(1.5rem + env(safe-area-inset-top, 0px)));
+  }
+
+  /* "Save the Date" */
+  .loading-screen--invitation:not(.loading-screen--plain) .loading-screen__std-headline {
+    margin-top: 1.75rem;
+    font-size: clamp(3.1rem, 15vw, 4.4rem);
+    line-height: 1.1;
+    color: var(--ls-ivory);
+    text-shadow:
+      0 1px 2px color-mix(in srgb, var(--ls-forest-deep) 70%, transparent),
+      0 0 26px color-mix(in srgb, var(--ls-champagne) 28%, transparent);
+  }
+
+  /* "69 more days to go" — framed by hairlines */
+  .loading-screen--invitation:not(.loading-screen--plain) .loading-screen__std-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    margin-top: 0.55rem;
+    font-size: clamp(0.68rem, 3.2vw, 0.82rem);
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    color: var(--ls-champagne);
+  }
+
+  .loading-screen--invitation:not(.loading-screen--plain) .loading-screen__std-kicker::before,
+  .loading-screen--invitation:not(.loading-screen--plain) .loading-screen__std-kicker::after {
+    content: "";
+    width: clamp(1.25rem, 7vw, 2rem);
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--ls-champagne-soft));
+  }
+
+  .loading-screen--invitation:not(.loading-screen--plain) .loading-screen__std-kicker::after {
+    background: linear-gradient(90deg, var(--ls-champagne-soft), transparent);
+  }
+
+  /* Couple names */
+  .loading-screen--invitation:not(.loading-screen--plain) .loading-screen__std-names-slot::before {
+    width: 110%;
+    height: min(100%, 13rem);
+    background: radial-gradient(
+      ellipse 60% 55% at 50% 50%,
+      color-mix(in srgb, var(--ls-forest-deep) 55%, transparent) 0%,
+      color-mix(in srgb, var(--ls-forest-deep) 22%, transparent) 55%,
+      transparent 80%
+    );
+  }
+
+  .loading-screen--invitation:not(.loading-screen--plain) .loading-screen__std-names {
+    width: 98%;
+    filter:
+      drop-shadow(0 1px 1px color-mix(in srgb, var(--ls-forest-deep) 85%, transparent))
+      drop-shadow(0 6px 18px color-mix(in srgb, var(--ls-forest-deep) 55%, transparent));
+  }
+
+  .loading-screen--invitation:not(.loading-screen--plain) .loading-screen__std-name {
+    font-size: clamp(1.75rem, 8.6vw, 2.6rem);
+    line-height: 1.12;
+    letter-spacing: 0.035em;
+    background: var(--ls-ivory);
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+
+  .loading-screen--invitation:not(.loading-screen--plain) .loading-screen__std-and {
+    margin: 0.05em 0 0.02em;
+    font-size: clamp(1.8rem, 8.5vw, 2.4rem);
+    line-height: 1;
+    background: linear-gradient(120deg, #f4ecd6 0%, var(--ls-champagne) 50%, #cdbf98 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+
+  /* Date cards */
+  .loading-screen--invitation:not(.loading-screen--plain) .loading-screen__std-box {
+    border-color: color-mix(in srgb, var(--ls-champagne) 55%, transparent);
+    border-radius: 1.1rem;
+    box-shadow:
+      0 14px 30px color-mix(in srgb, var(--ls-forest-deep) 45%, transparent),
+      inset 0 1px 0 color-mix(in srgb, var(--ls-ivory) 30%, transparent);
+  }
+
+  .loading-screen--invitation:not(.loading-screen--plain) .loading-screen__std-box::after {
+    border-color: color-mix(in srgb, var(--ls-champagne) 40%, transparent);
+  }
+
+  .loading-screen--invitation:not(.loading-screen--plain) .loading-screen__std-box-overlay {
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      transparent 42%,
+      color-mix(in srgb, var(--ls-forest-deep) 55%, transparent) 70%,
+      color-mix(in srgb, var(--ls-forest-deep) 88%, transparent) 100%
+    );
+  }
+
+  .loading-screen--invitation:not(.loading-screen--plain) .loading-screen__std-box-num {
+    font-size: clamp(1.6rem, 7.6vw, 2rem);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--ls-ivory);
+  }
+
+  .loading-screen--invitation:not(.loading-screen--plain) .loading-screen__std-box-label {
+    position: relative;
+    margin-top: 0.4rem;
+    padding-top: 0.3rem;
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    color: var(--ls-champagne);
+  }
+
+  .loading-screen--invitation:not(.loading-screen--plain) .loading-screen__std-box-label::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 1.1rem;
+    height: 1px;
+    transform: translateX(-50%);
+    background: var(--ls-champagne-soft);
+  }
+
+  /* Footer — time, venue, invite copy, status */
+  .loading-screen--invitation:not(.loading-screen--plain) .loading-screen__std-venue {
+    gap: 0.25rem;
+    margin-bottom: 0.85rem;
+  }
+
+  .loading-screen--invitation:not(.loading-screen--plain) .loading-screen__std-venue-time {
+    font-size: clamp(0.72rem, 3.2vw, 0.84rem);
+    letter-spacing: 0.28em;
+    color: var(--ls-champagne);
+  }
+
+  .loading-screen--invitation:not(.loading-screen--plain) .loading-screen__std-venue-name {
+    font-family: "Cormorant Garamond", "SortsMillGoudy", Georgia, serif;
+    font-size: clamp(1.1rem, 4.6vw, 1.3rem);
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    color: var(--ls-ivory);
+  }
+
+  .loading-screen--invitation:not(.loading-screen--plain) .loading-screen__std-eyebrow {
+    font-size: clamp(0.66rem, 3vw, 0.76rem);
+    font-weight: 600;
+    letter-spacing: 0.34em;
+    color: var(--ls-champagne);
+  }
+
+  .loading-screen--invitation:not(.loading-screen--plain) .loading-screen__std-copy {
+    font-family: "Cormorant Garamond", "SortsMillGoudy", Georgia, serif;
+    font-size: clamp(1.05rem, 4.4vw, 1.2rem);
+    color: color-mix(in srgb, var(--ls-ivory) 90%, transparent);
+  }
+
+  .loading-screen--invitation:not(.loading-screen--plain) .loading-screen__std-rule {
+    width: 4.5rem;
+    background: linear-gradient(90deg, transparent, var(--ls-champagne-soft), transparent);
+  }
+
+  .loading-screen--invitation:not(.loading-screen--plain) .loading-screen__std-rule::after {
+    width: 5px;
+    height: 5px;
+    border-radius: 0;
+    transform: translate(-50%, -50%) rotate(45deg);
+    background: var(--ls-champagne);
+    box-shadow: 0 0 8px color-mix(in srgb, var(--ls-champagne) 60%, transparent);
+  }
+
+  .loading-screen--invitation:not(.loading-screen--plain) .loading-screen__std-status {
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    color: color-mix(in srgb, var(--ls-ivory) 78%, transparent);
+  }
+
+  .loading-screen--invitation:not(.loading-screen--plain) .loading-screen__std-track {
+    height: 2px;
+    background: color-mix(in srgb, var(--ls-ivory) 18%, transparent);
+    box-shadow: none;
+  }
+
+  .loading-screen--invitation:not(.loading-screen--plain) .loading-screen__std-bar {
+    background: linear-gradient(90deg, #cdbf98 0%, var(--ls-champagne) 60%, var(--ls-ivory) 100%);
+    box-shadow: 0 0 10px color-mix(in srgb, var(--ls-champagne) 70%, transparent);
+  }
+}
+
+/* Short phones: keep the enlarged mobile type from crowding the stack */
+@media (max-width: 767px) and (max-height: 680px) {
+  .loading-screen--invitation:not(.loading-screen--plain) .loading-screen__save-date header {
+    padding-top: max(1.5rem, calc(1rem + env(safe-area-inset-top, 0px)));
+  }
+  .loading-screen--invitation:not(.loading-screen--plain) .loading-screen__std-headline {
+    margin-top: 1rem;
+    font-size: clamp(2.7rem, 13vw, 3.6rem);
+  }
+  .loading-screen--invitation:not(.loading-screen--plain) .loading-screen__std-venue {
+    margin-bottom: 0.5rem;
+  }
+}
+
 /* ---- Plain (no images) display — siteConfig.loadingScreen.display = "plain" ----
    Silk: champagne fabric with slow-drifting light folds, fine grain, gold-foil date. */
 
@@ -1979,12 +2257,6 @@
 }
 
 .loading-screen--plain .loading-screen__std-names {
-  background: linear-gradient(
-    118deg,
-    var(--couple-name-fill, var(--color-welcome-navy)) 0%,
-    var(--couple-name-fill-mid, var(--color-motif-deep)) 46%,
-    var(--couple-name-fill-accent, var(--color-welcome-heading)) 100%
-  );
   filter: drop-shadow(0 2px 8px color-mix(in srgb, var(--ls-plain-ink) 14%, transparent));
 }
 
@@ -2262,7 +2534,7 @@
 }
 
 .loading-screen--plain .loading-screen__std-names {
-  width: min(84%, 21rem);
+  width: min(94%, 30rem);
   filter: drop-shadow(0 1px 0 rgb(255 255 255 / 70%));
 }
 

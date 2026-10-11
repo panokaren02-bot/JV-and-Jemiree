@@ -8,6 +8,7 @@ import React, {
   useState,
 } from 'react';
 import Image from 'next/image';
+import localFont from 'next/font/local';
 import {
   motion,
   useReducedMotion,
@@ -18,9 +19,20 @@ import { useSiteConfig } from '@/hooks/use-site-config';
 import { siteConfig as defaultSiteConfig } from '@/content/site';
 import { parseWeddingDate } from '@/lib/wedding-date';
 import { InviteParticles } from '@/components/loader/InviteParticles';
-import { InvitePhotoBackdrop } from '@/components/loader/invite-photo-backdrop';
 import { PlainAtmosphere } from '@/components/loader/PlainAtmosphere';
 import './envelope-invite.css';
+
+const theSeasons = localFont({
+  src: '../../Font/Fontspring-DEMO-theseasons-reg.otf',
+  display: 'swap',
+  variable: '--font-the-seasons',
+});
+
+const aboveTheBeyond = localFont({
+  src: '../../Font/above-the-beyond-script.otf',
+  display: 'swap',
+  variable: '--font-above-beyond',
+});
 
 interface HeroProps {
   onOpen: () => void;
@@ -124,11 +136,6 @@ export const Hero: React.FC<HeroProps> = ({
     return { month, day, year };
   }, [letterDateNumeric]);
 
-  const backgroundPhotos = useMemo(
-    () => (content.backgroundPhotos ?? []).map((src) => encodeURI(src)),
-    [content.backgroundPhotos],
-  );
-  const showPhotoBackdrop = !isPlain && backgroundPhotos.length > 0;
 
   const envelopePolaroids = useMemo(() => {
     const photos = (content.photos ?? []).map((src) => encodeURI(src));
@@ -491,7 +498,7 @@ export const Hero: React.FC<HeroProps> = ({
           ? { opacity: 0, y: 0, scale: 1 }
           : visible
             ? { opacity: 1, y: 0, scale: 1 }
-            : { opacity: 0, y: 18, scale: 0.985 }
+            : { opacity: 0, y: 0, scale: 1 }
       }
       transition={
         isExiting
@@ -509,12 +516,7 @@ export const Hero: React.FC<HeroProps> = ({
         }),
       } as React.CSSProperties}
     >
-      {showPhotoBackdrop && (
-        <div className="invite-photo-backdrop-wrap invite-photo-backdrop-wrap--envelope" aria-hidden="true">
-          <InvitePhotoBackdrop className="invite-photo-backdrop--envelope" photos={backgroundPhotos} />
-        </div>
-      )}
-
+      {/* Photos mode: the marquee behind this screen is the shared backdrop in app/page.tsx */}
       {isPlain && (
         <>
           <PlainAtmosphere fixed baseColor={plainTheme.background} />
@@ -603,7 +605,20 @@ export const Hero: React.FC<HeroProps> = ({
         {liveMessage}
       </p>
 
-      <div className="env-invite-stage">
+      <motion.div
+        className="env-invite-stage"
+        initial={false}
+        animate={
+          visible || isExiting
+            ? { opacity: 1, y: 0, scale: 1 }
+            : { opacity: 0, y: 36, scale: 0.92 }
+        }
+        transition={
+          visible && enterFromLoading && !reduceMotion
+            ? { duration: 1.25, delay: 0.45, ease: [0.22, 1, 0.36, 1] }
+            : { duration: 0.01 }
+        }
+      >
         <div className="env-invite-cluster">
           <motion.div
             className="env-invite-focus"
@@ -680,15 +695,20 @@ export const Hero: React.FC<HeroProps> = ({
                       <span className="env-invite-letter-label">{content.headline}</span>
                       <span className="env-invite-letter-date">{letterDateNumeric}</span>
                       <span className="env-invite-letter-invited">{content.eyebrow}</span>
-                      <div
-                        className="env-invite-letter-names couple-name-lockup"
-                        role="img"
-                        aria-label={coupleNames}
-                        style={{
-                          maskImage: `url("${content.coupleNameImage}")`,
-                          WebkitMaskImage: `url("${content.coupleNameImage}")`,
-                        }}
-                      />
+                      <h2
+                        className="env-invite-letter-names env-invite-letter-names--text"
+                        aria-label={`${siteConfig.couple.bride} and ${siteConfig.couple.groom}`}
+                      >
+                        <span aria-hidden="true" className={`${theSeasons.className} env-invite-letter-name`}>
+                          {siteConfig.couple.bride}
+                        </span>
+                        <span aria-hidden="true" className={`${aboveTheBeyond.className} env-invite-letter-and`}>
+                          and
+                        </span>
+                        <span aria-hidden="true" className={`${theSeasons.className} env-invite-letter-name`}>
+                          {siteConfig.couple.groom}
+                        </span>
+                      </h2>
                     </div>
                   </motion.div>
 
@@ -840,7 +860,7 @@ export const Hero: React.FC<HeroProps> = ({
 
           </motion.div>
         </div>
-      </div>
+      </motion.div>
 
       <div className="env-invite-cta-bar" aria-live="off">
         <motion.div

@@ -3,7 +3,7 @@
 import React, { useMemo } from "react"
 import localFont from "next/font/local"
 import { motion, useReducedMotion } from "motion/react"
-import { StorySection } from "@/components/StorySection"
+import { StorySection, storyTextItemVariants } from "@/components/StorySection"
 import { layeredSectionTitleSize, sectionType } from "@/lib/section-typography"
 import { useSiteConfig } from "@/hooks/use-site-config"
 import { siteConfig as defaultSiteConfig } from "@/content/site"
@@ -146,14 +146,15 @@ function chapterTextFromParagraphs(
   return (
     <>
       {paragraphs.map((paragraph, index) => (
-        <p
+        <motion.p
           key={index}
+          variants={storyTextItemVariants}
           className={
             paragraphs.length > 1 && index < paragraphs.length - 1 ? "mb-4" : undefined
           }
         >
           {formatStoryParagraph(paragraph, groom, bride)}
-        </p>
+        </motion.p>
       ))}
     </>
   )
@@ -189,7 +190,7 @@ export function LoveStory() {
       <SectionCornerDecos cornerDecos={cornerDecos} />
 
       <header
-        className="relative z-20 px-4 pb-4 pt-8 text-center sm:px-6 sm:pt-10 md:px-8 md:pt-12"
+        className="relative z-20 px-4 pb-2 pt-16 text-center sm:px-6 sm:pt-20 md:px-8 md:pt-24"
       >
         <motion.div
           className="relative mx-auto max-w-5xl @container/love-story"
@@ -200,16 +201,29 @@ export function LoveStory() {
         >
           <OrnamentalDivider />
           <LoveStoryTitle title={loveStory.title} subtitle={loveStory.subtitle} />
+          {loveStory.intro ? (
+            <p
+              className={`font-goudy-italic mx-auto mt-5 max-w-xl px-2 italic leading-relaxed sm:mt-6 ${sectionType.textRelaxed}`}
+              style={{ color: "var(--color-welcome-text)" }}
+            >
+              {formatStoryParagraph(loveStory.intro, groom, bride)}
+            </p>
+          ) : null}
+          <div className="mt-5 sm:mt-6">
+            <OrnamentalDivider />
+          </div>
         </motion.div>
       </header>
 
       {chapters.map((chapter, index) => (
         <StorySection
           key={`${chapter.image}-${index}`}
+          eyebrow={chapter.eyebrow}
           title={chapter.title}
           theme={chapter.theme}
           layout={chapter.layout}
-          imageSrc={chapter.image}
+          imageSrc={encodeURI(chapter.image)}
+          imageAlt={`${groom} and ${bride}`}
           text={chapterTextFromParagraphs(chapter.paragraphs, groom, bride)}
           plain={isPlain}
           chapterIndex={index}
@@ -242,7 +256,7 @@ export function LoveStory() {
               className={`font-goudy-italic mt-2 sm:mt-3 ${sectionType.label} not-italic tracking-wide`}
               style={{ color: "var(--color-welcome-green)" }}
             >
-              — {loveStory.closingCitation}
+              {loveStory.closingCitation}
             </footer>
           </blockquote>
           {isPlain && eucalyptusDecos.sectionBottom ? (

@@ -66,10 +66,10 @@ export type AttireColor = string | { name: string; hex: string }
 
 // ── The couple ──────────────────────────────────────────────────────────────
 const COUPLE = {
-  bride: "Jemiree M. Atienza",
+  bride: "Jemiree Atienza",
   brideNickname: "Jemiree",
   groom: "JV Jade Geronga",
-  groomNickname: "JV",
+  groomNickname: "Jade",
 }
 
 // ── Date & times ────────────────────────────────────────────────────────────
@@ -78,7 +78,7 @@ const WEDDING_DAY = "Sunday"
 const TIMES = {
   entourageCall: "3:00 PM", // entourage arrival
   guestArrival: "3:30 PM", // guests arrival (shown in Event Details + reminders)
-  ceremony: "4:30 PM",
+  ceremony: "4:00 PM",
   reception: "7:00 PM",
 }
 
@@ -88,7 +88,7 @@ const CEREMONY_VENUE = {
   name: "Erica's Garden, Hagonoy Bulacan",
   address: "Hagonoy, Bulacan, Philippines",
   map: "https://maps.app.goo.gl/xpnYtFZ4Wr6p3XTr5",
-  photos: ["/Details/ceremony (1).jpg", "/Details/ceremony (2).jpg", "/Details/ceremony (3).jpg"],
+  photos: ["/Details/ceremony (1).jpg", "/Details/ceremony (3).jpg"],
 }
 const RECEPTION_VENUE = {
   name: "Erica's Garden, Hagonoy Bulacan",
@@ -96,7 +96,6 @@ const RECEPTION_VENUE = {
   map: "https://maps.app.goo.gl/25rg2xVft55rQXvs7",
   photos: [
     "/Details/ceremony (1).jpg",
-    "/Details/ceremony (2).jpg",
     "/Details/ceremony (3).jpg",
   ],
 }
@@ -141,11 +140,11 @@ const VENUE_CARDS = {
 
 // ── RSVP & contact ──────────────────────────────────────────────────────────
 const RSVP = {
-  deadline: "December 1, 2026",
+  deadline: "November 23, 2026",
   coordinator: "{groom} / {bride}", // {groom} / {bride} → couple nicknames
   phone: "to be announced",
 }
-const HASHTAGS = ["#TheJemireeJadeStory"] // ⚠ check — looks like it's from a previous couple
+const HASHTAGS = ["#JADEfoundhisJEM"] // ⚠ check — looks like it's from a previous couple
 
 // ── Attire guide (Event Details → Attire Guidelines) ────────────────────────
 // SHOW = which cards to display AND their order, top to bottom. Examples:
@@ -177,22 +176,20 @@ const ATTIRE = {
   show: ["sponsors", "guests"] as AttireGroupId[],
 
   sponsors: {
-    title: "Principal Sponsors",
-    image: "/Details/entourage.png",
+    title: "Attire for Principal Sponsors",
+    image: "/Details/sponsors (2).png",
     palette: [ ] as AttireColor[],
 
     ladies: {
-      label: "Ladies",
-      details:
-        "Formal floor-length dresses in elegant shades of sage, olive, and deep botanical green.",
-      highlight: "Formal Dresses",
+      label: "Ninang",
+      details: "Formal Long Dress",
+      highlight: "Formal Long Dress",
     },
 
     gentlemen: {
-      label: "Gentlemen",
-      details:
-        "Formal suit or dress shirt paired with tailored slacks in coordinated sage, olive, or deep green tones.",
-      highlight: "Suit or Dress Shirt with Slacks",
+      label: "Ninong",
+      details: "Barong Tagalog",
+      highlight: "Barong Tagalog",
     },
   },
 
@@ -217,22 +214,20 @@ const ATTIRE = {
   },
 
   guests: {
-    title: "Guests",
-    image: "/Details/guest.png",
+    title: "Attire for Guests",
+    image: "/Details/guest (4).png",
     palette: DRESS_CODE_PALETTE,
 
     ladies: {
       label: "Ladies",
-      details:
-        "Elegant formal dresses in the wedding's sage green palette. Guests may choose different dress styles while keeping the overall look sophisticated, soft, and coordinated.",
-      highlight: "Formal Dresses",
+      details: "Semi Formal Dress",
+      highlight: "Semi Formal Dress",
     },
 
     gentlemen: {
       label: "Gentlemen",
-      details:
-        "Dress shirts paired with tailored slacks in complementary sage, olive, beige, or neutral tones for a polished and sophisticated formal ensemble.",
-      highlight: "Dress Shirt with Slacks",
+      details: "Semi Formal Attire",
+      highlight: "Semi Formal Attire",
     },
   },
 }
@@ -249,14 +244,14 @@ export const canonicalSiteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? SITE_URL).r
 // ── Look & feel ─────────────────────────────────────────────────────────────
 // "plain"  = no photo backgrounds anywhere (botanical cards, hides photo-only blocks)
 // "photos" = photo backgrounds on the loader, envelope and closing section
-const DISPLAY_MODE = "plain" as "photos" | "plain"
+const DISPLAY_MODE = "photos" as "photos" | "plain"
 
 // ── Shared images ───────────────────────────────────────────────────────────
 const BRAND = {
   monogram: "/monogram/monogram.png",
-  coupleNameImage: "/Details/newCoupleName.png", // couple-name lettering (loader, envelope)
+  coupleNameImage: "/Details/coupleNamedisplay.png", // couple-name lettering (loader, envelope)
   seal: "/deco/sealnew.png", // envelope wax seal
-  backgroundMusic: "/background_music/BTS - Magic Shop (Beautiful Wedding Piano Version).mp3",
+  backgroundMusic: "/background_music/Y2Mate.is - The BEST BTS Wedding Mashup Ever _ Beautiful Romantic Orchestra Version.mp3",
 }
 
 // Couple photos reused across the site (gallery, loader, reminders, snap & share, closing)
@@ -360,9 +355,10 @@ export const siteConfig = {
     coupleNameImage: BRAND.coupleNameImage,
     // Shown in the three date cards (Month / Day / Year), left to right (display: "photos")
     photos: [
-      "/frontboxes/couple (1).webp",
-      "/frontboxes/couple (2).webp",
-      "/frontboxes/couple (3).webp",
+      "/frontboxes/box_1.jpg",
+      "/frontboxes/box_2.jpg",
+      "/frontboxes/box_3.jpg",
+      "/frontboxes/box_4.jpg",
     ],
     dateLabels: ["Month", "Day", "Year"],
     // Plain mode invitation card — classic invitation wording around the couple's names ("" to hide a line)
@@ -389,10 +385,13 @@ export const siteConfig = {
   },
   // Love story timeline (components/sections/love-story.tsx + StorySection)
   loveStory: {
-    title: "Our Love Story",
-    subtitle: "Our Journey to Forever",
-    closingQuote: "I have found the one whom my soul loves.",
-    closingCitation: "Song of Solomon 3: 4",
+    // A message to everyone celebrating with us. {groom} / {bride} → couple nicknames.
+    title: "To Our Loved Ones",
+    subtitle: "a message from our hearts",
+    intro:
+      "Before we say \"I do,\" we want to pause and say thank you to every person who has loved us, prayed for us, and walked with us to this day.",
+    closingQuote: "We always thank God for all of you and continually mention you in our prayers.",
+    closingCitation: "1 Thessalonians 1: 2",
     eucalyptusDecos: {
       topLeft: DECOR.sideLeft,
       bottomRight: DECOR.sideRight,
@@ -401,99 +400,80 @@ export const siteConfig = {
     },
     chapters: [
       {
-        title: "Two Strangers, One Journey",
+        eyebrow: "Welcome",
+        title: "To Everyone Celebrating With Us",
         theme: "light" as const,
         layout: "image-left" as const,
-        image: "/mobile-background/couples (1).webp",
+        image: "/mobile-background/couple (3).webp",
         paragraphs: [
-          "In 2018, what started as two strangers meeting turned into a beautiful journey neither of them expected.",
+          "Thank you for being here. Whether you are beside us in person or celebrating with us from afar, your presence makes this day complete.",
+          "This is not only our day. It is a celebration of everyone who helped write our story.",
         ],
       },
       {
-        title: "Growing Friendship",
+        eyebrow: "To Our Parents",
+        title: "Our First Teachers of Love",
         theme: "dark" as const,
         layout: "image-right" as const,
-        image: "/mobile-background/couples (2).webp",
+        image: "/mobile-background/couple (5).webp",
         paragraphs: [
-          "From playful conversations and {groom}'s endless teasing of {bride}, a friendship slowly grew into something deeper.",
+          "Everything we know about love, we first learned from you: in your sacrifices, your patience, and your quiet, everyday faithfulness.",
+          "Thank you for raising us, for trusting us, and for giving us your blessing as we build a home of our own.",
         ],
       },
       {
-        title: "A Love That Grew Stronger",
+        eyebrow: "To Our Families",
+        title: "Two Families, Now One",
         theme: "light" as const,
         layout: "image-left" as const,
-        image: "/mobile-background/couples (3).webp",
+        image: "/mobile-background/couple (6).webp",
         paragraphs: [
-          "Behind the jokes and little arguments was a love that continued to grow stronger every day.",
+          "To our siblings, grandparents, titos, titas, and cousins, thank you for welcoming each of us as your own.",
+          "Today our families become one, and we are so grateful to share a table, a name, and a lifetime of memories with you.",
         ],
       },
       {
-        title: "The Season of Distance",
+        eyebrow: "To Our Friends",
+        title: "The Ones Who Stayed",
         theme: "dark" as const,
         layout: "image-right" as const,
-        image: "/mobile-background/couples (4).webp",
+        image: "/mobile-background/couple (19).webp",
         paragraphs: [
-          "Then in 2024, came the season of distance. As they began their long-distance relationship, they learned that love is not measured by the miles between them, but by the choice to keep choosing each other.",
+          "To the friends who laughed with us, listened to us, and put up with all of {groom}'s teasing, thank you.",
+          "You were there for the jokes, the long talks, and the in-between moments. We could not have asked for better company on this journey.",
         ],
       },
       {
-        title: "Calls, Prayers, and Patience",
+        eyebrow: "To Those Who Prayed",
+        title: "Love Across the Distance",
         theme: "light" as const,
         layout: "image-left" as const,
-        image: "/mobile-background/couples (5).webp",
+        image: "/mobile-background/couple (29).webp",
         paragraphs: [
-          "Through countless calls, prayers, patience, and waiting, they proved that love can overcome any distance.",
+          "When miles kept us apart, many of you kept us in your prayers. Your encouragement carried us through the calls, the waiting, and the hard days.",
+          "Thank you for believing in us, and in a love worth waiting for.",
         ],
       },
       {
-        title: "The Question in Taiwan",
+        eyebrow: "To Those Who Traveled",
+        title: "Every Mile Means So Much",
         theme: "dark" as const,
         layout: "image-right" as const,
-        image: "/mobile-background/couples (6).webp",
+        image: "/mobile-background/couple (30).webp",
         paragraphs: [
-          "In 2025, in Taiwan, {groom} asked {bride} the most important question of their lives.",
+          "To everyone who traveled near and far, rearranged schedules, and made time to be here, we see your effort, and it means the world to us.",
+          "Thank you for choosing to spend this day with us.",
         ],
       },
       {
-        title: "She Said Yes",
+        eyebrow: "With Grateful Hearts",
+        title: "Thank You, With All Our Love",
         theme: "light" as const,
         layout: "image-left" as const,
-        image: "/mobile-background/couples (7).webp",
-        paragraphs: ["And with a heart full of love, {bride} said yes."],
-      },
-      {
-        title: "Surrounded by Love",
-        theme: "dark" as const,
-        layout: "image-right" as const,
-        image: "/mobile-background/couples (8).webp",
+        image: "/mobile-background/couple (35).webp",
         paragraphs: [
-          "Now in 2026, surrounded by the people who mean the most to them, they begin their forever.",
-        ],
-      },
-      {
-        title: "Forever Partners",
-        theme: "light" as const,
-        layout: "image-left" as const,
-        image: "/mobile-background/couples (9).webp",
-        paragraphs: ["From strangers, to best friends, to forever partners."],
-      },
-      {
-        title: "Their Greatest Adventure",
-        theme: "dark" as const,
-        layout: "image-right" as const,
-        image: "/mobile-background/couples (10).webp",
-        paragraphs: [
-          "Their greatest adventure begins — a lifetime of love, chosen again and again, no matter the distance.",
-        ],
-      },
-      {
-        title: "Ready to Say I Do",
-        theme: "light" as const,
-        layout: "image-left" as const,
-        image: "/mobile-background/couples (11).webp",
-        paragraphs: [
-          "From two strangers meeting in 2018, through years of teasing, laughter, distance, and prayer, to a yes in Taiwan — {groom} and {bride} are ready to say \"I do.\"",
-          "Join us as we begin forever.",
+          "As we begin this new chapter, we carry each of you with us. May today be filled with joy, laughter, and the same love you have shown us all these years.",
+          "With all our love, {groom} & {bride}",
         ],
       },
     ],
@@ -504,14 +484,23 @@ export const siteConfig = {
     title: "Gallery",
     subtitle: "our favorite moments",
     description:
-      "From our first chapter to this beautiful season of commitment — every moment has been a testament to love, faith, and grace.",
+      "From our first chapter to this beautiful season of commitment, every moment has been a testament to love, faith, and grace.",
     footnote:
-      "More pictures will be added as we gather the rest of our favorite moments. Please check back — this gallery is still growing.",
+      "More pictures will be added as we gather the rest of our favorite moments. Please check back, this gallery is still growing.",
     buttonText: "View Full Gallery",
     buttonHref: "/gallery",
     decos: { ...SECTION_DECOS },
-    // Uses COUPLE_PHOTOS; replace with your own list if the gallery should differ
-    images: COUPLE_PHOTOS.map((image) => ({ image, text: "" })),
+    // Phones: swipeable portrait carousel (public/mobile-background)
+    images: [1, 2, 8, 10, 12, 14, 17, 21, 24, 27, 32, 36].map((n) => ({
+      image: `/mobile-background/couple (${n}).webp`,
+      text: "",
+    })),
+    // Tablet/desktop: landscape mosaic (public/desktop-background). The 1st and 8th photos show large.
+    desktopImages: [2, 7, 12, 17, 23, 28, 34, 39, 45, 51, 57, 63].map((n) => ({
+      image: `/desktop-background/couple (${n}).webp`,
+      text: "",
+    })),
+    // The full /gallery page lists every photo in public/desktop-background + public/mobile-background
   },
   // Event details section (components/sections/details.tsx)
   // Venue names, addresses, dates, times, maps and venue photos come from ceremony / reception below.
@@ -539,11 +528,11 @@ export const siteConfig = {
     },
     // Cards, colors, images and which groups show → QUICK SETUP → ATTIRE
     attire: {
-      title: "Attire Guidelines",
+      title: "Attire / Dress Code",
       description: "Please dress according to the guidelines below.",
       // Shown above a card's palette
       paletteTitle: "Dress Code Palette",
-      paletteSubtitle: "Long Gown and Barong Tagalog",
+      paletteSubtitle: "Semi Formal Attire",
       colorGuideTitle: "Color Guide",
       colorGuideNote: "Please refer to the exact colors below for dress code.",
       // Order and visibility come from ATTIRE.show (skips blanks, typos and repeats)
@@ -576,7 +565,7 @@ export const siteConfig = {
           ],
         },
         {
-          title: "Strictly Formal",
+          title: "Dress Code",
           variant: "accent" as "accent" | "soft",
           showPalette: true,
           paragraphs: [
@@ -984,11 +973,6 @@ export const siteConfig = {
           "It would mean so much if you could stay with us through the end of the program. We have prepared the evening with love, and we hope you will laugh, take photos, and celebrate until the night draws to a close.",
       },
       {
-        question: "What if I have dietary restrictions or allergies?",
-        answer:
-          "Please let us know about any dietary restrictions or allergies when you RSVP. We want to ensure everyone can enjoy the celebration comfortably.",
-      },
-      {
         question: "How can I help the couple have a great time during their wedding?",
         answer:
           "• Pray with us for favorable weather and the continuous blessings of our Lord as we enter this new chapter of our lives as husband and wife.\n• RSVP as soon as your schedule is cleared.\n• Dress according to the attire guide and color palette.\n• Arrive on time.\n• Follow the seating arrangement at the reception.\n• Stay until the end of the program.\n• Join the activities and enjoy!",
@@ -1031,9 +1015,8 @@ export const siteConfig = {
     showAccounts: true,
     accountsTitle: "For e-gifts",
     accounts: [
-      { show: true, label: "BDO", accountName: "Mair", accountNumber: "***63434", qr: "/QR/BDO.png" },
-      { show: false, label: "MariBank", accountName: "", accountNumber: "", qr: "" },
-      { show: true, label: "GCash", accountName: "Mair", accountNumber: "***63434", qr: "/QR/BDO.png" },
+      { show: true, label: "LandBank", accountName: "Jemiree Atienza", accountNumber: "XXXXXX3502", qr: "/QR/LandBank.png" },
+      { show: true, label: "GoTyme Bank", accountName: "JEMIREE ATIENZA", accountNumber: "XXXXXX7019", qr: "/QR/GoTyme.png" },
     ] as { show: boolean; label: string; accountName: string; accountNumber: string; qr: string }[],
     // Leave any path "" to hide that decoration
     decos: { ...SECTION_DECOS },
@@ -1519,8 +1502,12 @@ Now, as they prepare to say yes before God and the people they love most, Cather
       show: true,
       title: "Our Favorite Moments",
       caption: "Share your snapshots to be featured in our keepsake gallery.",
-      // 3 photos: two squares on top, one wide photo below
-      images: COUPLE_PHOTOS.slice(0, 3),
+      // Two squares on top, one wide (3:2) photo below
+      images: [
+        "/frontboxes/box_1.jpg",
+        "/frontboxes/box_2.jpg",
+        "/desktop-background/couple (8).webp",
+      ],
     },
     website: {
       show: true,

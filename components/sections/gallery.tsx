@@ -5,11 +5,13 @@ import { createPortal } from "react-dom"
 import Image from "next/image"
 import Link from "next/link"
 import localFont from "next/font/local"
-import { X, ChevronLeft, ChevronRight, Camera } from "lucide-react"
+import { motion, useReducedMotion } from "motion/react"
+import { X, ChevronLeft, ChevronRight, Camera, Expand } from "lucide-react"
 import { Cinzel } from "next/font/google"
 import { Section } from "@/components/section"
 import { sectionType } from "@/lib/section-typography"
 import { useSiteConfig } from "@/hooks/use-site-config"
+import { siteConfig as defaultSiteConfig } from "@/content/site"
 
 const cinzel = Cinzel({
   subsets: ["latin"],
@@ -71,7 +73,43 @@ const badgeStyle: React.CSSProperties = {
 }
 
 const CORNER_DECO_CLASS =
-  "block h-auto w-auto max-w-[130px] sm:max-w-[200px] md:max-w-[260px] lg:max-w-[320px] select-none opacity-90"
+  "block h-auto w-auto max-w-[130px] sm:max-w-[200px] md:max-w-[260px] lg:max-w-[300px] select-none"
+
+const CORNERS = [
+  { key: "topLeft", place: "left-0 top-0", origin: "top left", x: -18, y: -18 },
+  { key: "topRight", place: "right-0 top-0", origin: "top right", x: 18, y: -18 },
+  { key: "bottomLeft", place: "left-0 bottom-0", origin: "bottom left", x: -18, y: 18 },
+  { key: "bottomRight", place: "right-0 bottom-0", origin: "bottom right", x: 18, y: 18 },
+] as const
+
+/** Corner sprigs that grow in from their corner when the section scrolls into view. */
+function CornerDecos({
+  decos,
+  reduceMotion,
+}: {
+  decos: Record<(typeof CORNERS)[number]["key"], string>
+  reduceMotion: boolean | null
+}) {
+  return (
+    <>
+      {CORNERS.map(({ key, place, origin, x, y }, i) =>
+        decos[key] ? (
+          <motion.div
+            key={key}
+            className={`pointer-events-none absolute z-10 ${place}`}
+            style={{ transformOrigin: origin }}
+            initial={reduceMotion ? false : { opacity: 0, scale: 0.82, x, y }}
+            whileInView={{ opacity: 0.95, scale: 1, x: 0, y: 0 }}
+            viewport={{ once: true, amount: 0.1 }}
+            transition={{ duration: 1.1, delay: 0.1 + i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <DecoImg src={decos[key]} className={CORNER_DECO_CLASS} />
+          </motion.div>
+        ) : null,
+      )}
+    </>
+  )
+}
 
 function DecoImg({ src, className }: { src: string; className: string }) {
   return (
@@ -133,14 +171,27 @@ function GalleryTitle({ title, subtitle }: { title: string; subtitle: string }) 
 
 type GalleryItem = { image: string; text: string }
 
+const revealEase = [0.22, 1, 0.36, 1] as const
+
+// Desktop mosaic: these positions render as large 2×2 tiles (dense grid fills around them)
+const FEATURED_TILES = new Set([0, 7])
+
+function encodeSrc(src: string) {
+  return encodeURI(src)
+}
+
 export function Gallery() {
   const { gallery } = useSiteConfig()
-  const galleryItems: GalleryItem[] = gallery.images
+  const reduceMotion = useReducedMotion()
+  const mobileItems: GalleryItem[] = gallery.images ?? defaultSiteConfig.gallery.images
+  const desktopItems: GalleryItem[] =
+    gallery.desktopImages ?? defaultSiteConfig.gallery.desktopImages ?? mobileItems
   const decos = gallery.decos
 
+  // The lightbox pages through whichever list was tapped (phone carousel or desktop mosaic)
+  const [galleryItems, setGalleryItems] = useState<GalleryItem[]>(mobileItems)
   const [selectedImage, setSelectedImage] = useState<GalleryItem | null>(null)
   const [currentIndex, setCurrentIndex] = useState(0)
-  const [isLoading, setIsLoading] = useState(true)
   const [isMounted, setIsMounted] = useState(false)
   const [touchStartX, setTouchStartX] = useState<number | null>(null)
   const [touchDeltaX, setTouchDeltaX] = useState(0)
@@ -164,8 +215,9 @@ export function Gallery() {
     resetZoom()
   }, [resetZoom])
 
-  const openLightbox = useCallback((item: GalleryItem, index: number) => {
+  const openLightbox = useCallback((items: GalleryItem[], item: GalleryItem, index: number) => {
     if (pointerStart.current.dragging) return
+    setGalleryItems(items)
     setSelectedImage(item)
     setCurrentIndex(index)
     resetZoom()
@@ -183,11 +235,6 @@ export function Gallery() {
 
   useEffect(() => {
     setIsMounted(true)
-  }, [])
-
-  useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 500)
-    return () => clearTimeout(timer)
   }, [])
 
   const navigateImage = useCallback((direction: 'prev' | 'next') => {
@@ -236,9 +283,9 @@ export function Gallery() {
   useEffect(() => {
     if (selectedImage) {
       const next = new window.Image()
-      next.src = galleryItems[(currentIndex + 1) % galleryItems.length].image
+      next.src = encodeSrc(galleryItems[(currentIndex + 1) % galleryItems.length].image)
       const prev = new window.Image()
-      prev.src = galleryItems[(currentIndex - 1 + galleryItems.length) % galleryItems.length].image
+      prev.src = encodeSrc(galleryItems[(currentIndex - 1 + galleryItems.length) % galleryItems.length].image)
     }
   }, [selectedImage, currentIndex, galleryItems])
 
@@ -254,18 +301,7 @@ export function Gallery() {
         className="relative z-10 overflow-hidden pt-14 pb-10 sm:pt-16 sm:pb-12 md:pt-20 md:pb-16 lg:pt-24 lg:pb-20"
       >
         {/* Corner decorations */}
-        <div className="pointer-events-none absolute left-0 top-0 z-10">
-          <DecoImg src={decos.topLeft} className={CORNER_DECO_CLASS} />
-        </div>
-        <div className="pointer-events-none absolute right-0 top-0 z-10">
-          <DecoImg src={decos.topRight} className={CORNER_DECO_CLASS} />
-        </div>
-        <div className="pointer-events-none absolute bottom-0 left-0 z-10">
-          <DecoImg src={decos.bottomLeft} className={CORNER_DECO_CLASS} />
-        </div>
-        <div className="pointer-events-none absolute bottom-0 right-0 z-10">
-          <DecoImg src={decos.bottomRight} className={CORNER_DECO_CLASS} />
-        </div>
+        <CornerDecos decos={decos} reduceMotion={reduceMotion} />
 
       {/* Header */}
       <div className="relative z-20 mx-auto mb-8 max-w-5xl px-3 text-center sm:mb-10 sm:px-4 md:mb-12">
@@ -307,52 +343,46 @@ export function Gallery() {
 
       {/* Gallery content */}
       <div className="relative z-20 w-full max-w-6xl mx-auto px-6 sm:px-10 md:px-12 pb-2 sm:pb-3">
-        {isLoading ? (
-          <div className="flex items-center justify-center h-64 sm:h-80 md:h-96">
-            <div
-              className="h-12 w-12 animate-spin rounded-full border-[3px]"
-              style={{
-                borderColor: "color-mix(in srgb, var(--color-motif-accent) 25%, transparent)",
-                borderTopColor: C.accent,
-              }}
-            />
-          </div>
-        ) : (
-          <>
+        <>
             {/* Mobile: swipeable sliding gallery (scroll-snap carousel) */}
             <div className="sm:hidden">
               <div
-                className="flex gap-3 overflow-x-auto px-1 pt-1 pb-4 snap-x snap-mandatory scroll-px-4 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                className="-mx-6 flex gap-3 overflow-x-auto px-[10%] pt-1 pb-4 snap-x snap-mandatory [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
                 aria-label="Gallery carousel"
               >
-                {galleryItems.map((item, index) => (
-                  <button
+                {mobileItems.map((item, index) => (
+                  <motion.button
                     key={item.image + index}
                     type="button"
-                    className="group relative snap-center shrink-0 w-[80%] rounded-xl p-1.5 transition-transform duration-300 active:scale-[0.98]"
+                    className="group relative snap-center shrink-0 w-[80%] rounded-xl p-1.5 active:scale-[0.98]"
                     style={frameStyle}
+                    initial={reduceMotion ? false : { opacity: 0, y: 24, scale: 0.96 }}
+                    whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                    viewport={{ once: true, amount: 0.3 }}
+                    transition={{ duration: 0.7, delay: Math.min(index, 2) * 0.1, ease: revealEase }}
                     onPointerDown={handleThumbPointerDown}
                     onPointerMove={handleThumbPointerMove}
-                    onClick={() => openLightbox(item, index)}
+                    onClick={() => openLightbox(mobileItems, item, index)}
                     aria-label={`Open image ${index + 1}`}
                   >
-                    <div className="relative aspect-[3/4] overflow-hidden rounded-lg">
+                    <div className="relative aspect-[2/3] overflow-hidden rounded-lg">
                       <Image
-                        src={item.image}
+                        src={encodeSrc(item.image)}
                         alt={item.text || `Gallery image ${index + 1}`}
                         fill
                         sizes="80vw"
                         className="object-cover"
+                        priority={index === 0}
                       />
                       <div className="pointer-events-none absolute inset-0 rounded-lg" style={innerFrameStyle} />
                     </div>
 
                     <div className="absolute top-3.5 right-3.5 rounded-full px-2 py-0.5 backdrop-blur-sm" style={badgeStyle}>
                       <span className="text-[11px] font-medium tracking-wider">
-                        {index + 1}/{galleryItems.length}
+                        {index + 1}/{mobileItems.length}
                       </span>
                     </div>
-                  </button>
+                  </motion.button>
                 ))}
               </div>
 
@@ -364,47 +394,57 @@ export function Gallery() {
               </p>
             </div>
 
-            {/* Tablet/Desktop: framed grid with a gentle stagger */}
-            <div className="hidden sm:grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-5 lg:gap-6 lg:pb-8">
-              {galleryItems.map((item, index) => (
-                <button
-                  key={item.image + index}
-                  type="button"
-                  className={`group relative w-full rounded-xl p-1.5 transition-all duration-300 hover:-translate-y-1 ${index % 2 === 1 ? "lg:translate-y-8 lg:hover:translate-y-7" : ""}`}
-                  style={frameStyle}
-                  onPointerDown={handleThumbPointerDown}
-                  onPointerMove={handleThumbPointerMove}
-                  onClick={() => openLightbox(item, index)}
-                  aria-label={`Open image ${index + 1}`}
-                >
-                  <div className="relative aspect-[3/4] overflow-hidden rounded-lg">
-                    <Image
-                      src={item.image}
-                      alt={item.text || `Gallery image ${index + 1}`}
-                      fill
-                      sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 20vw"
-                      className="object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                    <div
-                      className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                      style={{
-                        background:
-                          "linear-gradient(to top, color-mix(in srgb, var(--color-welcome-navy) 55%, transparent), transparent 55%)",
-                      }}
-                    />
-                    <div className="pointer-events-none absolute inset-0 rounded-lg" style={innerFrameStyle} />
-                  </div>
-
-                  <div
-                    className="absolute top-3.5 right-3.5 rounded-full px-2 py-0.5 opacity-0 backdrop-blur-sm transition-opacity duration-300 group-hover:opacity-100"
-                    style={badgeStyle}
+            {/* Tablet/Desktop: landscape mosaic with two large feature tiles */}
+            <div className="hidden sm:grid grid-cols-2 lg:grid-cols-3 [grid-auto-flow:dense] gap-3 md:gap-4 lg:gap-5 lg:pb-4">
+              {desktopItems.map((item, index) => {
+                const featured = FEATURED_TILES.has(index)
+                return (
+                  <motion.button
+                    key={item.image + index}
+                    type="button"
+                    className={`group relative w-full rounded-xl p-1.5 transition-shadow duration-300 hover:shadow-xl ${featured ? "col-span-2 lg:row-span-2" : ""}`}
+                    style={frameStyle}
+                    initial={reduceMotion ? false : { opacity: 0, y: 28, scale: 0.97 }}
+                    whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                    viewport={{ once: true, amount: 0.25 }}
+                    transition={{ duration: 0.75, delay: (index % 3) * 0.08, ease: revealEase }}
+                    onClick={() => openLightbox(desktopItems, item, index)}
+                    aria-label={`Open image ${index + 1}`}
                   >
-                    <span className="text-[11px] font-medium tracking-wider">
-                      {index + 1}/{galleryItems.length}
-                    </span>
-                  </div>
-                </button>
-              ))}
+                    <div
+                      className={`relative aspect-[3/2] overflow-hidden rounded-lg ${featured ? "lg:aspect-auto lg:h-full" : ""}`}
+                    >
+                      <Image
+                        src={encodeSrc(item.image)}
+                        alt={item.text || `Gallery image ${index + 1}`}
+                        fill
+                        sizes={
+                          featured
+                            ? "(max-width: 1024px) 100vw, 66vw"
+                            : "(max-width: 1024px) 50vw, 33vw"
+                        }
+                        className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                        priority={index === 0}
+                      />
+                      <div
+                        className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                        style={{
+                          background:
+                            "linear-gradient(to top, color-mix(in srgb, var(--color-welcome-navy) 55%, transparent), transparent 55%)",
+                        }}
+                      />
+                      <span
+                        className="absolute bottom-3 right-3 flex h-8 w-8 translate-y-1 items-center justify-center rounded-full opacity-0 backdrop-blur-sm transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100"
+                        style={badgeStyle}
+                        aria-hidden
+                      >
+                        <Expand className="h-3.5 w-3.5" />
+                      </span>
+                      <div className="pointer-events-none absolute inset-0 rounded-lg" style={innerFrameStyle} />
+                    </div>
+                  </motion.button>
+                )
+              })}
             </div>
 
             <div className="mt-10 flex justify-center sm:mt-12 md:mt-14">
@@ -432,8 +472,7 @@ export function Gallery() {
               src={decos.footerVine}
               className="mx-auto mt-6 block h-auto w-56 select-none opacity-90 sm:mt-8 sm:w-72 md:w-96"
             />
-          </>
-        )}
+        </>
       </div>
       </Section>
 
@@ -562,7 +601,7 @@ export function Gallery() {
               onClick={(e) => e.stopPropagation()}
             >
               <Image
-                src={selectedImage.image}
+                src={encodeSrc(selectedImage.image)}
                 alt={selectedImage.text.trim() || `Gallery image ${currentIndex + 1}`}
                 width={1600}
                 height={2000}

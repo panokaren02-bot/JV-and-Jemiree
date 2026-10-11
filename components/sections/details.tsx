@@ -903,7 +903,7 @@ export function Details() {
             {attireGroups.map((group) => {
               const palette = toPaletteColors(group.palette)
               const hasPalette = palette.length > 0
-              const halves = [group.ladies, group.gentlemen].filter((half) => half.details.trim())
+              const halves = [group.gentlemen, group.ladies].filter((half) => half.details.trim())
               return (
                 <AttireCard
                   key={group.id}

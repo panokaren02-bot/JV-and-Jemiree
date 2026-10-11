@@ -1,8 +1,14 @@
 "use client"
 
-import React from "react"
+import React, { useRef } from "react"
 import localFont from "next/font/local"
-import { motion, useReducedMotion } from "motion/react"
+import {
+  motion,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+  type Variants,
+} from "motion/react"
 import { sectionType, storyChapterTitleSize } from "@/lib/section-typography"
 import Image from "next/image"
 import { TornPaperEdge } from "./TornPaperEdge"
@@ -17,6 +23,22 @@ const lightBg = "var(--color-welcome-bg)"
 const darkBg = "var(--color-welcome-green)"
 const revealEase = [0.22, 1, 0.36, 1] as const
 
+// Scroll-entry stagger for the photo layout: eyebrow → title → paragraphs
+export const storyTextContainerVariants: Variants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.14, delayChildren: 0.2 } },
+}
+
+export const storyTextItemVariants: Variants = {
+  hidden: { opacity: 0, y: 22, filter: "blur(4px)" },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: { duration: 0.8, ease: revealEase },
+  },
+}
+
 export type LoveStoryEucalyptusDecos = {
   topLeft: string
   bottomRight: string
@@ -26,6 +48,8 @@ export type LoveStoryEucalyptusDecos = {
 
 interface StorySectionProps {
   imageSrc?: string
+  imageAlt?: string
+  eyebrow?: string
   title?: string
   text: React.ReactNode
   layout: "image-left" | "image-right"
@@ -95,6 +119,8 @@ function PlainChapterDivider({ dark }: { dark: boolean }) {
 
 export const StorySection: React.FC<StorySectionProps> = ({
   imageSrc,
+  imageAlt = "Story moment",
+  eyebrow,
   title,
   text,
   layout,
@@ -109,6 +135,13 @@ export const StorySection: React.FC<StorySectionProps> = ({
   const showImage = !plain && Boolean(imageSrc)
   const reduceMotion = useReducedMotion()
   const slideFromLeft = layout === "image-left"
+  const sectionRef = useRef<HTMLDivElement>(null)
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  })
+  // Gentle parallax: the photo drifts slower than the page while scrolling past
+  const imageParallaxY = useTransform(scrollYProgress, [0, 1], reduceMotion ? [0, 0] : [36, -36])
 
   const imageFrameStyle = isDark
     ? {
@@ -144,12 +177,14 @@ export const StorySection: React.FC<StorySectionProps> = ({
   const plainAnimate = { opacity: 1, x: 0, y: 0, scale: 1 }
 
   const imageInitial = reduceMotion
-    ? { opacity: 1, scale: 1, y: 0 }
-    : { opacity: 0, scale: 0.9, y: 24 }
-
-  const textInitial = reduceMotion
-    ? { opacity: 1, y: 0 }
-    : { opacity: 0, y: 16 }
+    ? { opacity: 1, scale: 1, x: 0, rotate: 0, filter: "blur(0px)" }
+    : {
+        opacity: 0,
+        scale: 0.88,
+        x: slideFromLeft ? -56 : 56,
+        rotate: slideFromLeft ? -6 : 6,
+        filter: "blur(6px)",
+      }
 
   const sectionSurfaceClass = plain
     ? `love-story-plain-track love-story-plain-track--theme-${theme}${isFirst ? " love-story-plain-track--first" : ""}${isLast ? " love-story-plain-track--last" : ""}`
@@ -157,6 +192,7 @@ export const StorySection: React.FC<StorySectionProps> = ({
 
   return (
     <div
+      ref={sectionRef}
       className={`${theSeasons.variable} relative ${sectionSurfaceClass}`}
       style={plain ? undefined : { background: isDark ? darkBg : lightBg }}
     >
@@ -184,7 +220,7 @@ export const StorySection: React.FC<StorySectionProps> = ({
       )}
 
       <div
-        className={`container relative z-10 mx-auto px-2 py-12 md:px-12 ${showImage ? "md:py-32" : "md:py-14"} ${isFirst ? (showImage ? "pt-16 md:pt-36" : "pt-10 md:pt-16") : ""} ${isLast ? (showImage ? "pb-16 md:pb-36" : "pb-10 md:pb-16") : ""}`}
+        className={`container relative z-10 mx-auto px-2 py-12 md:px-12 ${showImage ? "md:py-32" : "md:py-14"} ${isFirst ? (showImage ? "pt-4 sm:pt-6 md:pt-16" : "pt-6 md:pt-10") : ""} ${isLast ? (showImage ? "pb-16 md:pb-36" : "pb-10 md:pb-16") : ""}`}
       >
         <div
           className={
@@ -196,17 +232,21 @@ export const StorySection: React.FC<StorySectionProps> = ({
           {showImage && imageSrc && (
             <div className="flex w-[45%] shrink-0 justify-center md:w-5/12">
               <motion.div
-                className={`relative w-full md:max-w-md ${rotation}`}
-                initial={imageInitial}
-                whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                viewport={{ once: true, margin: "-12%" }}
-                transition={{ duration: 0.95, delay: stagger, ease: revealEase }}
+                className="relative w-full md:max-w-md"
+                style={{ y: imageParallaxY }}
               >
-                <div className="w-full p-1.5 md:p-3" style={imageFrameStyle}>
-                  <div className="group relative aspect-[3/4] w-full overflow-hidden">
+              <motion.div
+                className="w-full"
+                initial={imageInitial}
+                whileInView={{ opacity: 1, scale: 1, x: 0, rotate: 0, filter: "blur(0px)" }}
+                viewport={{ once: true, margin: "-12%" }}
+                transition={{ duration: 1.1, ease: revealEase }}
+              >
+                <div className={`w-full p-1.5 md:p-3 ${rotation}`} style={imageFrameStyle}>
+                  <div className="group relative aspect-[3/5] w-full overflow-hidden md:aspect-[2/3]">
                     <Image
                       src={imageSrc}
-                      alt="Story moment"
+                      alt={imageAlt}
                       fill
                       sizes="(max-width: 768px) 45vw, (max-width: 1024px) 40vw, 33vw"
                       className="object-cover transition-transform duration-1000 group-hover:scale-105"
@@ -218,6 +258,7 @@ export const StorySection: React.FC<StorySectionProps> = ({
                     )}
                   </div>
                 </div>
+              </motion.div>
               </motion.div>
             </div>
           )}
@@ -248,7 +289,7 @@ export const StorySection: React.FC<StorySectionProps> = ({
               <p
                 className={`${theSeasons.className} story-plain-chapter-label mb-2 text-[0.58rem] font-medium uppercase sm:text-[0.62rem]`}
               >
-                Chapter {chapterLabel}
+                {eyebrow ?? `Chapter ${chapterLabel}`}
               </p>
               {title ? (
                 <h2
@@ -287,13 +328,23 @@ export const StorySection: React.FC<StorySectionProps> = ({
                   : "w-full @container/story px-2 sm:px-4"
               }
               style={{ color: isDark ? lightBg : "var(--color-welcome-text)" }}
-              initial={textInitial}
-              whileInView={{ opacity: 1, y: 0 }}
+              variants={storyTextContainerVariants}
+              initial={reduceMotion ? "visible" : "hidden"}
+              whileInView="visible"
               viewport={{ once: true, margin: "-10%" }}
-              transition={{ duration: 0.85, delay: stagger + 0.15, ease: revealEase }}
             >
+              {eyebrow && (
+                <motion.p
+                  variants={storyTextItemVariants}
+                  className={`font-goudy-italic mb-1.5 italic sm:mb-2 ${sectionType.label}`}
+                  style={{ color: isDark ? "var(--color-motif-soft)" : "var(--color-welcome-green)" }}
+                >
+                  {eyebrow}
+                </motion.p>
+              )}
               {title && (
-                <h2
+                <motion.h2
+                  variants={storyTextItemVariants}
                   className={`${theSeasons.className} mb-3 uppercase leading-tight tracking-[0.08em] sm:mb-4 sm:tracking-[0.1em] md:mb-6 md:tracking-[0.12em]`}
                   style={{
                     fontSize: storyChapterTitleSize,
@@ -301,7 +352,7 @@ export const StorySection: React.FC<StorySectionProps> = ({
                   }}
                 >
                   {title}
-                </h2>
+                </motion.h2>
               )}
               <div
                 className={`font-goudy-italic space-y-3 sm:space-y-4 md:space-y-6 lg:leading-[1.7] ${sectionType.textRelaxed}`}

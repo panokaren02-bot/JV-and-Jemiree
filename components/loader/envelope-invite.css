@@ -782,6 +782,64 @@
   display: none;
 }
 
+/* Text lockup (same names + fonts as the loading screen) — sized off the letter width */
+.env-invite-letter-names.env-invite-letter-names--text,
+.env-invite-screen .env-invite-letter-names.env-invite-letter-names--text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  min-height: 0;
+  aspect-ratio: auto;
+  margin: 0.3em 0 0.45em;
+  background: none;
+  filter: none;
+  -webkit-mask: none;
+  mask: none;
+  font-weight: 400;
+}
+
+.env-invite-letter-names--text .env-invite-letter-name,
+.env-invite-letter-names--text .env-invite-letter-and {
+  padding: 0 0.15em;
+  background: linear-gradient(
+    118deg,
+    color-mix(in srgb, var(--color-welcome-navy) 82%, black) 0%,
+    var(--color-welcome-navy) 55%,
+    color-mix(in srgb, var(--color-welcome-navy) 88%, black) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  opacity: 1;
+}
+
+.env-invite-letter-names--text .env-invite-letter-name {
+  font-size: calc(var(--env-letter-w) * 0.072);
+  line-height: 1.08;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.env-invite-letter-names--text .env-invite-letter-and {
+  margin: -0.08em 0 -0.04em;
+  font-size: calc(var(--env-letter-w) * 0.09);
+  line-height: 1.1;
+}
+
+.env-invite-screen--plain .env-invite-letter-names--text .env-invite-letter-name,
+.env-invite-screen--plain .env-invite-letter-names--text .env-invite-letter-and {
+  background: linear-gradient(
+    118deg,
+    var(--couple-name-fill, var(--color-welcome-navy)) 0%,
+    var(--couple-name-fill-mid, var(--color-motif-deep)) 46%,
+    var(--couple-name-fill-accent, var(--color-welcome-heading)) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
 .env-invite-polaroid {
   position: absolute;
   bottom: 10%;

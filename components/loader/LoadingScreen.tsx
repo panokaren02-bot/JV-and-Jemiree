@@ -2,10 +2,10 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
+import localFont from 'next/font/local';
 import { useReducedMotion } from 'motion/react';
 import { useSiteConfig } from '@/hooks/use-site-config';
 import { siteConfig as defaultSiteConfig } from '@/content/site';
-import { PhotoMarquee } from '@/components/loader/invite-photo-backdrop';
 import { PlainAtmosphere } from '@/components/loader/PlainAtmosphere';
 import './loading-screen.css';
 
@@ -13,6 +13,18 @@ interface LoadingScreenProps {
   onComplete: () => void;
   onFadeStart?: () => void;
 }
+
+const theSeasons = localFont({
+  src: '../../Font/Fontspring-DEMO-theseasons-reg.otf',
+  display: 'swap',
+  variable: '--font-the-seasons',
+});
+
+const aboveTheBeyond = localFont({
+  src: '../../Font/above-the-beyond-script.otf',
+  display: 'swap',
+  variable: '--font-above-beyond',
+});
 
 const STAGGER_DELAY_MS = 1100;
 const FIRST_BOX_DELAY_MS = 600;
@@ -44,6 +56,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete, onFade
     () => (content.backgroundPhotos ?? []).map((src) => encodeURI(src)),
     [content.backgroundPhotos],
   );
+  // The photo marquee itself is the shared backdrop in app/page.tsx (continues into the envelope screen)
   const showBackdrop = !isPlain && backgroundPhotos.length > 0;
   const plainTheme = content.plainTheme ?? defaultSiteConfig.loadingScreen.plainTheme;
   const cornerDecos = content.cornerDecos ?? defaultSiteConfig.loadingScreen.cornerDecos;
@@ -54,7 +67,6 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete, onFade
   const [visibleBoxes, setVisibleBoxes] = useState(0);
   const [statusIndex, setStatusIndex] = useState(0);
   const [now, setNow] = useState(() => new Date());
-  const photoCopies = reduceMotion ? 1 : 2;
 
   const weddingDate = useMemo(() => new Date(siteConfig.wedding.date), [siteConfig.wedding.date]);
   const hasValidDate = !Number.isNaN(weddingDate.getTime());
@@ -93,7 +105,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete, onFade
     : null;
 
   const ceremonyLine = siteConfig.ceremony.time ?? '';
-  const coupleNames = `${siteConfig.couple.groomNickname} & ${siteConfig.couple.brideNickname}`;
+  const coupleNames = `${siteConfig.couple.bride} and ${siteConfig.couple.groom}`;
 
 
   useEffect(() => {
@@ -147,7 +159,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete, onFade
 
   return (
     <div
-      className={`loading-screen loading-screen--invitation${isPlain ? ' loading-screen--plain' : ''} fixed inset-0 z-50 flex flex-col overflow-hidden overscroll-none h-dvh max-h-dvh w-screen${fadeOut ? ' is-fading' : ''}${reduceMotion ? ' is-reduced-motion' : ''}`}
+      className={`loading-screen loading-screen--invitation${isPlain ? ' loading-screen--plain' : ''}${showBackdrop ? ' loading-screen--shared-bg' : ''} fixed inset-0 z-50 flex flex-col overflow-hidden overscroll-none h-dvh max-h-dvh w-screen${fadeOut ? ' is-fading' : ''}${reduceMotion ? ' is-reduced-motion' : ''}`}
       aria-live="polite"
       aria-busy={!fadeOut}
       aria-label="Loading invitation"
@@ -163,13 +175,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete, onFade
       }
     >
       {showBackdrop && (
-        <>
-          <div className="loading-screen__backdrop" aria-hidden="true">
-            <PhotoMarquee photos={backgroundPhotos} copies={photoCopies} variant="loader" shuffle={false} />
-            <div className="loading-screen__backdrop-veil" />
-          </div>
-          <div className="loading-screen__readability-scrim" aria-hidden="true" />
-        </>
+        <div className="loading-screen__readability-scrim" aria-hidden="true" />
       )}
 
       {isPlain && (
@@ -246,15 +252,17 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete, onFade
         )}
 
         <div className="loading-screen__std-names-slot ls-reveal" style={{ '--ls-delay': '450ms' } as React.CSSProperties}>
-          <div
-            className="loading-screen__std-names couple-name-lockup"
-            role="img"
-            aria-label={coupleNames}
-            style={{
-              maskImage: `url("${content.coupleNameImage}")`,
-              WebkitMaskImage: `url("${content.coupleNameImage}")`,
-            }}
-          />
+          <h2 className="loading-screen__std-names" aria-label={coupleNames}>
+            <span aria-hidden="true" className={`${theSeasons.className} loading-screen__std-name`}>
+              {siteConfig.couple.bride}
+            </span>
+            <span aria-hidden="true" className={`${aboveTheBeyond.className} loading-screen__std-and`}>
+              and
+            </span>
+            <span aria-hidden="true" className={`${theSeasons.className} loading-screen__std-name`}>
+              {siteConfig.couple.groom}
+            </span>
+          </h2>
         </div>
 
         {isPlain && plainInvite.lineBelow && (

@@ -167,13 +167,18 @@ export default function Home() {
 
   return (
       <div className={`relative min-h-screen bg-cloud text-charcoal selection:bg-birch selection:text-nut font-sans ${pageScrollLocked ? "overflow-hidden" : ""}`}>
-        {loadingOverlayVisible && !plainLoader && (
-          <div
-            className="invite-photo-backdrop-wrap invite-photo-backdrop-wrap--loading"
+        {/* One photo backdrop shared by the loader and the envelope screen, so the
+            marquee keeps sliding through the hand-off; fades out with the envelope exit. */}
+        {(loadingOverlayVisible || showInvitation) && !plainLoader && (
+          <motion.div
+            className="invite-photo-backdrop-wrap invite-photo-backdrop-wrap--shared"
             aria-hidden="true"
+            initial={false}
+            animate={{ opacity: enteringFromInvite ? 0 : 1 }}
+            transition={{ duration: 1.65, delay: 0.29, ease: [0.22, 1, 0.36, 1] }}
           >
             <InvitePhotoBackdrop photos={siteConfig.loadingScreen?.backgroundPhotos} />
-          </div>
+          </motion.div>
         )}
 
         {loadingOverlayVisible && (
@@ -263,9 +268,9 @@ export default function Home() {
               >
                <Welcome />
               {/* <CoupleVideo />  */}
-              {/* <LoveStory /> */}
+              <LoveStory />
               <Countdown />
-              {/* <Gallery /> */}
+              <Gallery />
               {/* <MessageVideo /> */}
               <Messages />
               <Details />
