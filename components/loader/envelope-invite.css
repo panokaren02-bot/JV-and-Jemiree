@@ -2593,3 +2593,16 @@
     --env-envelope: color-mix(in srgb, var(--color-motif-deep) 88%, var(--color-motif-accent));
   }
 }
+
+/* Nickname lockup — The Seasons names, script "and" */
+.env-invite-letter-names--text .env-invite-letter-name--nickname {
+  font-size: calc(var(--env-letter-w) * 0.12);
+  line-height: 1.02;
+  letter-spacing: 0.1em;
+}
+
+.env-invite-letter-names--text .env-invite-letter-and--nickname {
+  margin: -0.04em 0;
+  font-size: calc(var(--env-letter-w) * 0.1);
+  line-height: 1.1;
+}

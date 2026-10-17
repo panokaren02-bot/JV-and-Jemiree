@@ -67,7 +67,7 @@ export type AttireColor = string | { name: string; hex: string }
 // ── The couple ──────────────────────────────────────────────────────────────
 const COUPLE = {
   bride: "Jemiree Atienza",
-  brideNickname: "Jemiree",
+  brideNickname: "Jem",
   groom: "JV Jade Geronga",
   groomNickname: "Jade",
 }
@@ -76,10 +76,10 @@ const COUPLE = {
 const WEDDING_DATE = "December 20, 2026" // e.g. "June 5, 2027"
 const WEDDING_DAY = "Sunday"
 const TIMES = {
-  entourageCall: "3:00 PM", // entourage arrival
-  guestArrival: "3:30 PM", // guests arrival (shown in Event Details + reminders)
-  ceremony: "4:00 PM",
-  reception: "7:00 PM",
+  entourageCall: "3:30 PM", // entourage arrival
+  guestArrival: "4:00 PM", // guests arrival (shown in Event Details + reminders)
+  ceremony: "4:30 PM",
+  reception: "6:45 PM",
 }
 
 // ── Venues ──────────────────────────────────────────────────────────────────
@@ -140,7 +140,7 @@ const VENUE_CARDS = {
 
 // ── RSVP & contact ──────────────────────────────────────────────────────────
 const RSVP = {
-  deadline: "November 23, 2026",
+  deadline: "November 20, 2026",
   coordinator: "{groom} / {bride}", // {groom} / {bride} → couple nicknames
   phone: "to be announced",
 }
@@ -158,6 +158,7 @@ const HASHTAGS = ["#JADEfoundhisJEM"] // ⚠ check — looks like it's from a pr
 //   image:     illustration path in /public ("" = no image; any size/shape works)
 //   palette:   colors for this card — "#9CAF88" or { name: "Sage", hex: "#9CAF88" }
 //              (names show on the swatches; [] = no palette)
+//   paletteSubtitle: script line above the palette ("" = shared eventDetails default)
 //   ladies / gentlemen:
 //     label:     e.g. "Ninang", "Bridesmaids", "Ladies"
 //     details:   the dress code text ("" hides this half of the card)
@@ -170,6 +171,15 @@ const DRESS_CODE_PALETTE: AttireColor[] = [
   { name: "Forest Green", hex: "#3E5940" },
 ]
 
+// Principal sponsors — greens taken from the sponsors illustration
+const SPONSORS_PALETTE: AttireColor[] = [
+  { name: "Pale Sage", hex: "#A9BF97" },
+  { name: "Sage", hex: "#8FA97E" },
+  { name: "Moss", hex: "#6F8C60" },
+  { name: "Hunter Green", hex: "#486B42" },
+  { name: "Evergreen", hex: "#2F4D2D" },
+]
+
 
 
 const ATTIRE = {
@@ -178,18 +188,19 @@ const ATTIRE = {
   sponsors: {
     title: "Attire for Principal Sponsors",
     image: "/Details/sponsors (2).png",
-    palette: [ ] as AttireColor[],
+    palette: SPONSORS_PALETTE,
+    paletteSubtitle: "Formal Attire",
 
     ladies: {
       label: "Ninang",
-      details: "Formal Long Dress",
+      details: "Formal Long Dress in sage to deep green tones",
       highlight: "Formal Long Dress",
     },
 
     gentlemen: {
       label: "Ninong",
-      details: "Barong Tagalog",
-      highlight: "Barong Tagalog",
+      details: "Formal Suit in sage or deep green with a white dress shirt",
+      highlight: "Formal Suit",
     },
   },
 
@@ -197,6 +208,7 @@ const ATTIRE = {
     title: "Entourage",
     image: "/Details/entourage.png",
     palette: [] as AttireColor[],
+    paletteSubtitle: "",
 
     ladies: {
       label: "Ladies",
@@ -217,6 +229,7 @@ const ATTIRE = {
     title: "Attire for Guests",
     image: "/Details/guest (4).png",
     palette: DRESS_CODE_PALETTE,
+    paletteSubtitle: "Semi Formal Attire",
 
     ladies: {
       label: "Ladies",
@@ -609,10 +622,9 @@ export const siteConfig = {
     //   icon:     fallback icon when there is no image —
     //             "arrival" | "rings" | "departure" | "cocktail" | "fireworks" | "dance"
     //   description: optional extra line ("" to hide)
-    // ⚠ check — 5:30 PM onward are placeholder times; set them to the real program.
     events: [
       {
-        show: true,
+        show: false,
         time: TIMES.entourageCall,
         title: "Entourage Assembly",
         description: "",
@@ -623,7 +635,7 @@ export const siteConfig = {
       {
         show: true,
         time: TIMES.guestArrival,
-        title: "Guest Arrival",
+        title: "Arrival at the Ceremony",
         description: "",
         location: "{ceremony}",
         image: "/weddingtimeline/arrivalimage.png",
@@ -640,7 +652,7 @@ export const siteConfig = {
       },
       {
         show: true,
-        time: TIMES.ceremony,
+        time: "5:00 PM",
         title: "Wedding Ceremony",
         description: "",
         location: "{ceremony}",
@@ -649,8 +661,8 @@ export const siteConfig = {
       },
       {
         show: true,
-        time: "5:30 PM",
-        title: "Photo Session",
+        time: "6:00 PM",
+        title: "Pictorial",
         description: "",
         location: "{ceremony}",
         image: "/weddingtimeline/PhotoSession.png",
@@ -658,7 +670,7 @@ export const siteConfig = {
       },
       {
         show: true,
-        time: "6:00 PM",
+        time: "6:30 PM",
         title: "Cocktail Hour",
         description: "",
         location: "{reception}",
@@ -675,7 +687,7 @@ export const siteConfig = {
         icon: "fireworks" as TimelineIconName,
       },
       {
-        show: true,
+        show: false,
         time: "7:30 PM",
         title: "Dinner Service",
         description: "",
@@ -684,7 +696,7 @@ export const siteConfig = {
         icon: "cocktail" as TimelineIconName,
       },
       {
-        show: true,
+        show: false,
         time: "8:30 PM",
         title: "Cake Cutting",
         description: "",
@@ -693,7 +705,7 @@ export const siteConfig = {
         icon: "fireworks" as TimelineIconName,
       },
       {
-        show: true,
+        show: false,
         time: "9:00 PM",
         title: "First Dance & Party",
         description: "",
@@ -702,7 +714,7 @@ export const siteConfig = {
         icon: "dance" as TimelineIconName,
       },
       {
-        show: true,
+        show: false,
         time: "10:00 PM",
         title: "Send-Off",
         description: "",
@@ -760,107 +772,36 @@ export const siteConfig = {
     script: "Are you going",
     intro: "Kindly confirm your attendance so we may prepare a place for you at our celebration.",
     deadlineLabel: "RSVP Deadline",
-    openButton: "Tap here to respond",
-    search: {
-      title: "RSVP",
-      script: "Find your Name",
-      placeholder: "Begin with your first name",
-      loading: "Preparing the guest list. We'll keep trying until names appear.",
-      refine: "Keep typing to refine results",
-      notFoundTitle: "Not finding your name?",
-      notFoundText: "We'd love to have you with us. Send a request to join the celebration.",
-      requestButton: "Request to Join",
-    },
-    invite: {
-      title: "You are Invited",
-      scriptFallback: "to our celebration",
-      greeting: "Hello {name}, you are invited to our wedding!",
-      seats: "We've reserved {count} for you.",
-      seatSingular: "seat",
-      seatPlural: "seats",
-    },
-    responded: {
-      title: "Thank You for Responding!",
-      text: "We've received your RSVP and look forward to celebrating with you!",
-      attending: "You're Attending!",
-      declined: "Unable to Attend",
-      guestCountLabel: "Number of Guests",
-      closeButton: "Close",
-    },
+    // Direct RSVP form — only the name is required
     form: {
-      attendLabel: "Can you attend? *",
-      yes: "Yes!",
-      no: "Sorry, No",
-      companionsLabel: "Who's Coming With You?",
-      companionsHint: "Please provide names and relationships for your {count} additional {guests}",
-      guestSingular: "guest",
-      guestPlural: "guests",
-      companionTitle: "Guest {n}",
-      companionNameLabel: "Full Name",
-      companionNamePlaceholder: "Name of guest {n}",
-      relationshipLabel: "Relationship with {name}",
-      relationshipFallbackName: "Primary Guest",
-      relationshipPlaceholder: "e.g., Spouse, Friend, Child, Parent",
-      // One-tap relationship choices shown under the relationship field
-      relationshipOptions: ["Spouse", "Partner", "Child", "Parent", "Sibling", "Friend"],
-      companionProgress: "Guest {n} of {total}",
-      companionsAdded: "{done} of {total} added",
-      prevButton: "Back",
-      nextButton: "Next guest",
-      phoneLabel: "Phone Number *",
-      phonePlaceholder: "09XX XXX XXXX",
-      phoneNote: "For wedding updates only. Your number stays private and will never be shown to other guests.",
+      nameLabel: "Full Name",
+      namePlaceholder: "e.g. Juan Dela Cruz",
+      paxLabel: "Number of Guests (Pax)",
+      paxPlaceholder: "e.g. 2",
+      paxHint: "Total number attending, including yourself",
+      maxPax: 10,
+      requiredNote: "Fields marked * are required",
+      emailLabel: "Email Address",
+      emailPlaceholder: "your.email@example.com",
+      phoneLabel: "Phone Number",
+      phonePlaceholder: "e.g. 0917 123 4567",
+      optional: "Optional",
       submitting: "Submitting...",
       submit: "Submit RSVP",
     },
-    phoneAlert: {
-      title: "A phone number is needed",
-      paragraphs: [
-        "We ask for your number so we can reach you with important updates — seating, timing, or anything you may need on the day.",
-        "Your number will not appear on this invitation, and it will not be shared with other guests. It is kept private and used only by us and our coordinators to take care of you.",
-      ],
-      button: "Add my number",
-    },
     success: {
-      title: "RSVP Confirmed",
-      attending: "We're thrilled you'll be joining us — your spot is saved!",
-      declined: "We'll miss you, but thank you for letting us know.",
-      neutral: "Thank you for your response!",
+      title: "RSVP Received",
+      text: "Thank you, {name}! We've saved {count} for you.",
+      seatSingular: "seat",
+      seatPlural: "seats",
       messagePrompt:
         "Before you go, leave a message for the couple — your words will be a cherished memory they can always look back on.",
       messageButton: "Leave a Message",
       laterButton: "Maybe later — close",
     },
-    request: {
-      title: "Request",
-      script: "to join us",
-      greetingNamed: "Hi {name} — want to celebrate with us? Send a request!",
-      greeting: "Want to celebrate with us? Send a request!",
-      optional: "(Optional)",
-      nameLabel: "Full Name *",
-      namePlaceholder: "Enter your full name",
-      emailLabel: "Email Address",
-      emailPlaceholder: "your.email@example.com",
-      phoneLabel: "Phone Number",
-      phonePlaceholder: "+63 912 345 6789",
-      guestsLabel: "Number of Guests *",
-      guestsPlaceholder: "How many guests?",
-      messageLabel: "Message",
-      messagePlaceholder: "Share why you'd like to join...",
-      submitting: "Submitting...",
-      submit: "Send Request",
-      sentTitle: "Request Sent!",
-      sentText: "We've received your request",
-      sentSubtext: "We'll review it and get back to you soon",
-      autoClose: "This will close automatically",
-    },
     messages: {
-      thankYou: "Thank you for your response!",
-      requestSubmitted: "Request submitted! We'll review and get back to you.",
-      loadFailed: "Failed to load guest list",
-      selectAttendance: "Please select if you can attend",
-      nameRequired: "Name is required",
-      requestFailed: "Failed to submit request. Please try again.",
+      nameRequired: "Please enter your name",
+      emailInvalid: "Please check your email address",
       submitFailed: "We couldn't save your RSVP. Please check your connection and try again.",
     },
   },

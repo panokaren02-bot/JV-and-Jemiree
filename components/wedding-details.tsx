@@ -90,7 +90,8 @@ export function WeddingDetails() {
               <Clock className="h-5 w-5 text-[#6B7280] mt-0.5 flex-shrink-0" />
               <div>
                 <label className="text-sm font-medium text-[#6B7280] block">Time</label>
-                <p className="text-[#111827] font-medium">{siteConfig.ceremony.time}</p>
+                <p className="text-[#111827] font-medium">Ceremony: {siteConfig.ceremony.time}</p>
+                <p className="text-[#111827] font-medium">Reception: {siteConfig.reception.time}</p>
               </div>
             </div>
           </div>

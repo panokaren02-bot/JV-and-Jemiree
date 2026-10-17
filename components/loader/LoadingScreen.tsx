@@ -105,7 +105,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete, onFade
     : null;
 
   const ceremonyLine = siteConfig.ceremony.time ?? '';
-  const coupleNames = `${siteConfig.couple.bride} and ${siteConfig.couple.groom}`;
+  const coupleNames = `${siteConfig.couple.brideNickname} and ${siteConfig.couple.groomNickname}`;
 
 
   useEffect(() => {
@@ -253,14 +253,14 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete, onFade
 
         <div className="loading-screen__std-names-slot ls-reveal" style={{ '--ls-delay': '450ms' } as React.CSSProperties}>
           <h2 className="loading-screen__std-names" aria-label={coupleNames}>
-            <span aria-hidden="true" className={`${theSeasons.className} loading-screen__std-name`}>
-              {siteConfig.couple.bride}
+            <span aria-hidden="true" className={`${theSeasons.className} loading-screen__std-name loading-screen__std-name--nickname`}>
+              {siteConfig.couple.brideNickname}
             </span>
-            <span aria-hidden="true" className={`${aboveTheBeyond.className} loading-screen__std-and`}>
+            <span aria-hidden="true" className={`${aboveTheBeyond.className} loading-screen__std-and loading-screen__std-and--nickname`}>
               and
             </span>
-            <span aria-hidden="true" className={`${theSeasons.className} loading-screen__std-name`}>
-              {siteConfig.couple.groom}
+            <span aria-hidden="true" className={`${theSeasons.className} loading-screen__std-name loading-screen__std-name--nickname`}>
+              {siteConfig.couple.groomNickname}
             </span>
           </h2>
         </div>

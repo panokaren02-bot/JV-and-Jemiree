@@ -914,7 +914,7 @@ export function Details() {
                     hasPalette ? (
                       <DressCodePaletteHeader
                         title={attire.paletteTitle}
-                        subtitle={attire.paletteSubtitle}
+                        subtitle={group.paletteSubtitle || attire.paletteSubtitle}
                         guideTitle={attire.colorGuideTitle}
                         guideNote={attire.colorGuideNote}
                       />

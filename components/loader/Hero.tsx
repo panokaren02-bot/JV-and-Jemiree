@@ -697,16 +697,16 @@ export const Hero: React.FC<HeroProps> = ({
                       <span className="env-invite-letter-invited">{content.eyebrow}</span>
                       <h2
                         className="env-invite-letter-names env-invite-letter-names--text"
-                        aria-label={`${siteConfig.couple.bride} and ${siteConfig.couple.groom}`}
+                        aria-label={`${brideName} and ${groomName}`}
                       >
-                        <span aria-hidden="true" className={`${theSeasons.className} env-invite-letter-name`}>
-                          {siteConfig.couple.bride}
+                        <span aria-hidden="true" className={`${theSeasons.className} env-invite-letter-name env-invite-letter-name--nickname`}>
+                          {brideName}
                         </span>
-                        <span aria-hidden="true" className={`${aboveTheBeyond.className} env-invite-letter-and`}>
+                        <span aria-hidden="true" className={`${aboveTheBeyond.className} env-invite-letter-and env-invite-letter-and--nickname`}>
                           and
                         </span>
-                        <span aria-hidden="true" className={`${theSeasons.className} env-invite-letter-name`}>
-                          {siteConfig.couple.groom}
+                        <span aria-hidden="true" className={`${theSeasons.className} env-invite-letter-name env-invite-letter-name--nickname`}>
+                          {groomName}
                         </span>
                       </h2>
                     </div>

@@ -355,14 +355,9 @@ export function Registry() {
                           {active.label.charAt(0)}
                         </span>
                       )}
-                      {active.accountName ? (
-                        <p className="font-goudy-italic mt-3 text-sm" style={{ color: c.body }}>
-                          {active.accountName}
-                        </p>
-                      ) : null}
                       {active.accountNumber ? (
                         <p
-                          className={`${cinzel.className} mt-1 text-[0.8rem] font-semibold tabular-nums tracking-[0.12em]`}
+                          className={`${cinzel.className} mt-3 text-[0.8rem] font-semibold tabular-nums tracking-[0.12em]`}
                           style={{ color: c.title }}
                         >
                           {active.accountNumber}

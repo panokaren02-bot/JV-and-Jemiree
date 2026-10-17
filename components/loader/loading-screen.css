@@ -2811,3 +2811,30 @@
   color: transparent;
   filter: drop-shadow(0 1px 0 rgb(255 255 255 / 70%)) drop-shadow(0 6px 14px color-mix(in srgb, var(--color-welcome-navy) 18%, transparent));
 }
+
+/* Nickname lockup — The Seasons names, script "and" */
+.loading-screen .loading-screen__std-names .loading-screen__std-name--nickname {
+  font-size: clamp(2.4rem, 11vw, 4rem);
+  line-height: 1;
+  letter-spacing: 0.1em;
+}
+
+.loading-screen .loading-screen__std-names .loading-screen__std-and--nickname {
+  margin: -0.05em 0;
+  font-size: clamp(2rem, 8.5vw, 3rem);
+  line-height: 1.1;
+}
+
+/* Mobile — let the short nicknames fill the frame */
+@media (max-width: 767px) {
+  .loading-screen .loading-screen__std-names .loading-screen__std-name--nickname {
+    font-size: clamp(3.4rem, 18vw, 5rem);
+    line-height: 0.98;
+    letter-spacing: 0.08em;
+  }
+
+  .loading-screen .loading-screen__std-names .loading-screen__std-and--nickname {
+    margin: -0.08em 0 -0.02em;
+    font-size: clamp(2.6rem, 13vw, 3.6rem);
+  }
+}
