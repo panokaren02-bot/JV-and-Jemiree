@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useId, type FormEvent, type ReactNode } from "react"
 import { createPortal } from "react-dom"
-import { CheckCircle, AlertCircle, Heart, MessageSquare, User, Users, Mail, Phone } from "lucide-react"
+import { CheckCircle, AlertCircle, Heart, MessageSquare, User } from "lucide-react"
 import { Cinzel } from "next/font/google"
 import localFont from "next/font/local"
 import { useSiteConfig } from "@/hooks/use-site-config"
@@ -76,10 +76,9 @@ const noticeStyle = {
   color: "var(--color-welcome-navy)",
 } as const
 
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-
-// pax is kept as typed; blank counts as 1
-const EMPTY_FORM = { name: "", pax: "", email: "", phone: "" }
+// Name only — each RSVP saves one seat
+const EMPTY_FORM = { name: "" }
+const SEATS_PER_RSVP = 1
 
 function fillText(template: string, values: Record<string, string | number>): string {
   return template.replace(/\{([a-zA-Z]+)\}/g, (m, k) => (k in values ? String(values[k]) : m))
@@ -89,7 +88,6 @@ export function GuestList() {
   const siteConfig = useSiteConfig()
   const copy = siteConfig.rsvp
   const ids = useId()
-  const maxPax = Math.max(1, copy.form.maxPax)
 
   const [form, setForm] = useState(EMPTY_FORM)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -116,19 +114,12 @@ export function GuestList() {
     }
   }, [saved])
 
-  const pax = Math.min(maxPax, Math.max(1, parseInt(form.pax, 10) || 1))
-
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     const name = form.name.trim()
-    const email = form.email.trim()
 
     if (!name) {
       setError(copy.messages.nameRequired)
-      return
-    }
-    if (email && !EMAIL_PATTERN.test(email)) {
-      setError(copy.messages.emailInvalid)
       return
     }
 
@@ -142,9 +133,7 @@ export function GuestList() {
         signal: AbortSignal.timeout(30_000),
         body: JSON.stringify({
           name,
-          email,
-          contact: form.phone.trim(),
-          allowedGuests: pax,
+          allowedGuests: SEATS_PER_RSVP,
           status: "confirmed",
         }),
       })
@@ -163,22 +152,13 @@ export function GuestList() {
       setIsSubmitting(false)
     }
 
-    setSaved({ name, pax })
+    setSaved({ name, pax: SEATS_PER_RSVP })
     setForm(EMPTY_FORM)
     invalidateInvitationData("/api/guests")
     window.dispatchEvent(new Event("rsvpUpdated"))
   }
 
-  const optional = (
-    <span
-      className="font-goudy-italic text-[0.72rem] font-normal normal-case tracking-normal"
-      style={{ color: "var(--color-welcome-text-soft)" }}
-    >
-      {copy.form.optional}
-    </span>
-  )
-
-  const field = (id: string, label: ReactNode, icon: ReactNode, input: ReactNode, hint?: string) => (
+  const field = (id: string, label: ReactNode, icon: ReactNode, input: ReactNode) => (
     <div>
       <label htmlFor={`${ids}-${id}`} className={labelClass} style={{ color: palette.heading }}>
         {label}
@@ -187,15 +167,6 @@ export function GuestList() {
         {input}
         {icon}
       </div>
-      {hint ? (
-        <p
-          id={`${ids}-${id}-hint`}
-          className="font-goudy-italic mt-1.5 pl-1 text-xs leading-snug"
-          style={{ color: "var(--color-welcome-text-soft)" }}
-        >
-          {hint}
-        </p>
-      ) : null}
     </div>
   )
 
@@ -287,10 +258,6 @@ export function GuestList() {
           </div>
 
           <form className="relative space-y-4 text-left sm:space-y-5" onSubmit={handleSubmit} noValidate>
-            <p className="font-goudy-italic -mt-1 text-center text-xs" style={{ color: "var(--color-welcome-text-soft)" }}>
-              {copy.form.requiredNote}
-            </p>
-
             {field(
               "name",
               <span>
@@ -313,74 +280,6 @@ export function GuestList() {
                 className={inputClass}
                 style={inputStyle}
                 aria-invalid={error === copy.messages.nameRequired}
-              />,
-            )}
-
-            {field(
-              "pax",
-              <>
-                <span>{copy.form.paxLabel}</span>
-                {optional}
-              </>,
-              <Users className={iconClass} aria-hidden />,
-              <input
-                id={`${ids}-pax`}
-                type="text"
-                inputMode="numeric"
-                pattern="[0-9]*"
-                maxLength={2}
-                value={form.pax}
-                onChange={(e) => setForm((prev) => ({ ...prev, pax: e.target.value.replace(/\D/g, "") }))}
-                placeholder={copy.form.paxPlaceholder}
-                className={inputClass}
-                style={inputStyle}
-                aria-describedby={`${ids}-pax-hint`}
-              />,
-              copy.form.paxHint,
-            )}
-
-            {field(
-              "email",
-              <>
-                <span>{copy.form.emailLabel}</span>
-                {optional}
-              </>,
-              <Mail className={iconClass} aria-hidden />,
-              <input
-                id={`${ids}-email`}
-                type="email"
-                autoComplete="email"
-                inputMode="email"
-                autoCapitalize="none"
-                value={form.email}
-                onChange={(e) => {
-                  setForm((prev) => ({ ...prev, email: e.target.value }))
-                  if (error) setError(null)
-                }}
-                placeholder={copy.form.emailPlaceholder}
-                className={inputClass}
-                style={inputStyle}
-                aria-invalid={error === copy.messages.emailInvalid}
-              />,
-            )}
-
-            {field(
-              "phone",
-              <>
-                <span>{copy.form.phoneLabel}</span>
-                {optional}
-              </>,
-              <Phone className={iconClass} aria-hidden />,
-              <input
-                id={`${ids}-phone`}
-                type="tel"
-                autoComplete="tel"
-                inputMode="tel"
-                value={form.phone}
-                onChange={(e) => setForm((prev) => ({ ...prev, phone: e.target.value }))}
-                placeholder={copy.form.phonePlaceholder}
-                className={inputClass}
-                style={inputStyle}
               />,
             )}
 

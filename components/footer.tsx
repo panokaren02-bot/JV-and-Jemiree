@@ -51,7 +51,7 @@ export function Footer() {
               textShadow: coastalTitleShadow,
             }}
           >
-            {siteConfig.couple.bride} & {siteConfig.couple.groom}
+            {siteConfig.couple.groom} & {siteConfig.couple.bride}
           </h3>
           <p className="text-sm mt-2" style={{ color: coastalPalette.body }}>
             {siteConfig.wedding.date}

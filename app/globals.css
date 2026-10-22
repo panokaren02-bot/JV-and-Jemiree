@@ -843,3 +843,45 @@ html {
 @media (prefers-reduced-motion: reduce) {
   .dash-pop, .dash-pop-badge { animation: none; }
 }
+
+/* Entourage ambience — falling eucalyptus leaves, glints and drifting glow */
+@keyframes ent-leaf-fall {
+  0% { top: -6%; transform: translateX(0) rotate(var(--r0)); opacity: 0; }
+  8% { opacity: var(--o); }
+  50% { transform: translateX(var(--sway)) rotate(calc(var(--r0) + 120deg)); }
+  92% { opacity: var(--o); }
+  100% { top: 104%; transform: translateX(0) rotate(calc(var(--r0) + 240deg)); opacity: 0; }
+}
+
+@keyframes ent-glint {
+  0%, 100% { opacity: 0; transform: scale(0.5) rotate(45deg); }
+  50% { opacity: 0.85; transform: scale(1) rotate(45deg); }
+}
+
+@keyframes ent-glow-drift {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(var(--dx), var(--dy), 0) scale(1.12); }
+}
+
+.ent-leaf {
+  position: absolute;
+  top: -6%;
+  opacity: 0;
+  animation: ent-leaf-fall var(--dur) linear var(--delay) infinite;
+  will-change: top, transform, opacity;
+}
+
+.ent-glint {
+  opacity: 0;
+  animation: ent-glint var(--dur) ease-in-out var(--delay) infinite;
+}
+
+.ent-glow {
+  animation: ent-glow-drift var(--dur) ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ent-leaf { display: none; }
+  .ent-glint, .ent-glow { animation: none; }
+  .ent-glint { opacity: 0.4; }
+}

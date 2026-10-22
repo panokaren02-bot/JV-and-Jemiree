@@ -697,16 +697,16 @@ export const Hero: React.FC<HeroProps> = ({
                       <span className="env-invite-letter-invited">{content.eyebrow}</span>
                       <h2
                         className="env-invite-letter-names env-invite-letter-names--text"
-                        aria-label={`${brideName} and ${groomName}`}
+                        aria-label={`${groomName} and ${brideName}`}
                       >
                         <span aria-hidden="true" className={`${theSeasons.className} env-invite-letter-name env-invite-letter-name--nickname`}>
-                          {brideName}
+                          {groomName}
                         </span>
                         <span aria-hidden="true" className={`${aboveTheBeyond.className} env-invite-letter-and env-invite-letter-and--nickname`}>
                           and
                         </span>
                         <span aria-hidden="true" className={`${theSeasons.className} env-invite-letter-name env-invite-letter-name--nickname`}>
-                          {groomName}
+                          {brideName}
                         </span>
                       </h2>
                     </div>

@@ -116,7 +116,7 @@ const VENUE_CARDS = {
     badge: "Ceremony & Reception",
     sectionLabel: "Venue",
     showDate: true,
-    showArrival: true,
+    showArrival: false,
     // Time rows on the card, e.g. "Ceremony 4:30 PM | Reception 7:00 PM"
     ceremonyLabel: "Ceremony",
     receptionLabel: "Reception",
@@ -127,7 +127,7 @@ const VENUE_CARDS = {
     badge: "Ceremony",
     sectionLabel: "Ceremony Venue",
     showDate: true,
-    showArrival: true,
+    showArrival: false,
   },
   reception: {
     show: true,
@@ -187,7 +187,7 @@ const ATTIRE = {
 
   sponsors: {
     title: "Attire for Principal Sponsors",
-    image: "/Details/sponsors (2).png",
+    image: "/Details/newsponsorattire.png",
     palette: SPONSORS_PALETTE,
     paletteSubtitle: "Formal Attire",
 
@@ -199,8 +199,8 @@ const ATTIRE = {
 
     gentlemen: {
       label: "Ninong",
-      details: "Formal Suit in sage or deep green with a white dress shirt",
-      highlight: "Formal Suit",
+      details: "Barong Tagalog",
+      highlight: "Barong Tagalog",
     },
   },
 
