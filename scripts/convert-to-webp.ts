@@ -8,8 +8,8 @@ const DIRECTORIES = args.length > 0
   ? args.map(dir => path.resolve(process.cwd(), dir))
   : [
       path.resolve(process.cwd(), "public", "images"),
-      path.resolve(process.cwd(), "public", "desktop-background"),
-      path.resolve(process.cwd(), "public", "mobile-background"),
+      path.resolve(process.cwd(), "public", "new-desktop-background"),
+      path.resolve(process.cwd(), "public", "new-mobile-background"),
       path.resolve(process.cwd(), "public", "Details"),
       path.resolve(process.cwd(), "public", "frontboxes"),
       path.resolve(process.cwd(), "public", "LoveStory"),

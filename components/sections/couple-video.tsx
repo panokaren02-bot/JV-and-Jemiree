@@ -291,7 +291,7 @@ export function CoupleVideo() {
                         onClick={handleThumbnailClick}
                       >
                         <Image
-                          src="/desktop-background/couples (32).webp"
+                          src="/new-desktop-background/couples (32).webp"
                           alt="Video thumbnail"
                           fill
                           className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"

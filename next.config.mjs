@@ -44,8 +44,8 @@ const nextConfig = {
     ],
     '/*': [
       './public/gallery/**/*',
-      './public/desktop-background/**/*',
-      './public/mobile-background/**/*',
+      './public/new-desktop-background/**/*',
+      './public/new-mobile-background/**/*',
       './public/LoveStory/**/*',
       './public/Details/**/*',
       './public/**/*.{jpg,jpeg,png,webp,gif,mp3,mp4,mov}',

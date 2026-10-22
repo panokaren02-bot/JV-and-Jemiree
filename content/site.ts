@@ -269,16 +269,16 @@ const BRAND = {
 
 // Couple photos reused across the site (gallery, loader, reminders, snap & share, closing)
 const COUPLE_PHOTOS = [
-  "/mobile-background/couple (1).webp",
-  "/mobile-background/couple (2).webp",
-  "/mobile-background/couple (3).webp",
-  "/mobile-background/couple (4).webp",
-  "/mobile-background/couple (5).webp",
-  "/mobile-background/couple (6).webp",
-  "/mobile-background/couple (7).webp",
-  "/mobile-background/couple (8).webp",
-  "/mobile-background/couple (9).webp",
-  "/mobile-background/couple (11).webp",
+  "/new-mobile-background/couples (1).webp",
+  "/new-mobile-background/couples (2).webp",
+  "/new-mobile-background/couples (3).webp",
+  "/new-mobile-background/couples (4).webp",
+  "/new-mobile-background/couples (5).webp",
+  "/new-mobile-background/couples (6).webp",
+  "/new-mobile-background/couples (7).webp",
+  "/new-mobile-background/couples (8).webp",
+  "/new-mobile-background/couples (9).webp",
+  "/new-mobile-background/couples (11).webp",
 ]
 
 // ── Decorations ─────────────────────────────────────────────────────────────
@@ -417,7 +417,7 @@ export const siteConfig = {
         title: "To Everyone Celebrating With Us",
         theme: "light" as const,
         layout: "image-left" as const,
-        image: "/mobile-background/couple (3).webp",
+        image: "/new-mobile-background/couples (3).webp",
         paragraphs: [
           "Thank you for being here. Whether you are beside us in person or celebrating with us from afar, your presence makes this day complete.",
           "This is not only our day. It is a celebration of everyone who helped write our story.",
@@ -428,7 +428,7 @@ export const siteConfig = {
         title: "Our First Teachers of Love",
         theme: "dark" as const,
         layout: "image-right" as const,
-        image: "/mobile-background/couple (5).webp",
+        image: "/new-mobile-background/couples (5).webp",
         paragraphs: [
           "Everything we know about love, we first learned from you: in your sacrifices, your patience, and your quiet, everyday faithfulness.",
           "Thank you for raising us, for trusting us, and for giving us your blessing as we build a home of our own.",
@@ -439,7 +439,7 @@ export const siteConfig = {
         title: "Two Families, Now One",
         theme: "light" as const,
         layout: "image-left" as const,
-        image: "/mobile-background/couple (6).webp",
+        image: "/new-mobile-background/couples (6).webp",
         paragraphs: [
           "To our siblings, grandparents, titos, titas, and cousins, thank you for welcoming each of us as your own.",
           "Today our families become one, and we are so grateful to share a table, a name, and a lifetime of memories with you.",
@@ -450,7 +450,7 @@ export const siteConfig = {
         title: "The Ones Who Stayed",
         theme: "dark" as const,
         layout: "image-right" as const,
-        image: "/mobile-background/couple (19).webp",
+        image: "/new-mobile-background/couples (19).webp",
         paragraphs: [
           "To the friends who laughed with us, listened to us, and put up with all of {groom}'s teasing, thank you.",
           "You were there for the jokes, the long talks, and the in-between moments. We could not have asked for better company on this journey.",
@@ -461,7 +461,7 @@ export const siteConfig = {
         title: "Love Across the Distance",
         theme: "light" as const,
         layout: "image-left" as const,
-        image: "/mobile-background/couple (29).webp",
+        image: "/new-mobile-background/couples (29).webp",
         paragraphs: [
           "When miles kept us apart, many of you kept us in your prayers. Your encouragement carried us through the calls, the waiting, and the hard days.",
           "Thank you for believing in us, and in a love worth waiting for.",
@@ -472,7 +472,7 @@ export const siteConfig = {
         title: "Every Mile Means So Much",
         theme: "dark" as const,
         layout: "image-right" as const,
-        image: "/mobile-background/couple (30).webp",
+        image: "/new-mobile-background/couples (30).webp",
         paragraphs: [
           "To everyone who traveled near and far, rearranged schedules, and made time to be here, we see your effort, and it means the world to us.",
           "Thank you for choosing to spend this day with us.",
@@ -483,7 +483,7 @@ export const siteConfig = {
         title: "Thank You, With All Our Love",
         theme: "light" as const,
         layout: "image-left" as const,
-        image: "/mobile-background/couple (35).webp",
+        image: "/new-mobile-background/couples (31).webp",
         paragraphs: [
           "As we begin this new chapter, we carry each of you with us. May today be filled with joy, laughter, and the same love you have shown us all these years.",
           "With all our love, {groom} & {bride}",
@@ -503,17 +503,17 @@ export const siteConfig = {
     buttonText: "View Full Gallery",
     buttonHref: "/gallery",
     decos: { ...SECTION_DECOS },
-    // Phones: swipeable portrait carousel (public/mobile-background)
-    images: [1, 2, 8, 10, 12, 14, 17, 21, 24, 27, 32, 36].map((n) => ({
-      image: `/mobile-background/couple (${n}).webp`,
+    // Phones: swipeable portrait carousel (public/new-mobile-background)
+    images: [1, 2, 8, 10, 12, 14, 17, 21, 24, 27, 32, 33].map((n) => ({
+      image: `/new-mobile-background/couples (${n}).webp`,
       text: "",
     })),
-    // Tablet/desktop: landscape mosaic (public/desktop-background). The 1st and 8th photos show large.
-    desktopImages: [2, 7, 12, 17, 23, 28, 34, 39, 45, 51, 57, 63].map((n) => ({
-      image: `/desktop-background/couple (${n}).webp`,
+    // Tablet/desktop: landscape mosaic (public/new-desktop-background). The 1st and 8th photos show large.
+    desktopImages: [2, 7, 12, 17, 23, 28, 34, 39, 45, 51, 57, 61].map((n) => ({
+      image: `/new-desktop-background/couples (${n}).webp`,
       text: "",
     })),
-    // The full /gallery page lists every photo in public/desktop-background + public/mobile-background
+    // The full /gallery page lists every photo in public/new-desktop-background + public/new-mobile-background
   },
   // Event details section (components/sections/details.tsx)
   // Venue names, addresses, dates, times, maps and venue photos come from ceremony / reception below.
@@ -1447,7 +1447,7 @@ Now, as they prepare to say yes before God and the people they love most, Cather
       images: [
         "/frontboxes/box_1.jpg",
         "/frontboxes/box_2.jpg",
-        "/desktop-background/couple (8).webp",
+        "/new-desktop-background/couples (8).webp",
       ],
     },
     website: {
