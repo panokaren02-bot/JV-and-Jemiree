@@ -483,7 +483,7 @@ export const siteConfig = {
         title: "Thank You, With All Our Love",
         theme: "light" as const,
         layout: "image-left" as const,
-        image: "/new-mobile-background/couples (31).webp",
+        image: "/new-mobile-background/couples (13).webp",
         paragraphs: [
           "As we begin this new chapter, we carry each of you with us. May today be filled with joy, laughter, and the same love you have shown us all these years.",
           "With all our love, {groom} & {bride}",
