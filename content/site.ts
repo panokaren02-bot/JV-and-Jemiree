@@ -278,7 +278,7 @@ const COUPLE_PHOTOS = [
   "/mobile-background/couple (7).webp",
   "/mobile-background/couple (8).webp",
   "/mobile-background/couple (9).webp",
-  "/mobile-background/couple (10).webp",
+  "/mobile-background/couple (11).webp",
 ]
 
 // ── Decorations ─────────────────────────────────────────────────────────────
